@@ -1,9 +1,9 @@
 import React from 'react'
 
-const deployed = () => {
+const test = () => {
   return (
-    <div>deployed by stoli</div>
+    <div>links work</div>
   )
 }
 
-export default deployed
+export default test
