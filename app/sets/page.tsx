@@ -1,11 +1,25 @@
-import { FlashCardForm } from "../components/FlashCardForm";
+import React from 'react'
 
-
-export default function Home() {
-  return (
-    <div className="container mx-auto p-10">
-      <h1 className="text-2xl font-bold mb-5">FlashCards</h1>
-      <FlashCardForm />
-    </div>
-  );
+interface User {
+    id: number;
+    name: string;
 }
+
+const UsersPage = async () => {
+    const res = await fetch
+    ('https://jsonplaceholder.typicode.com/users', { cache: 'no-store'})
+    const users: User[] = await  res.json();
+
+  
+    return (
+    <>
+        <h1>Users</h1>
+        <p>{new Date().toLocaleTimeString()}</p>
+        <ul>
+            {users.map(user => <li key={user.id}>{user.name}</li>)}
+        </ul>
+    </>
+  )
+}
+
+export default UsersPage
