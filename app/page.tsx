@@ -4,7 +4,9 @@ export default function Home() {
   return (
     <main>
       <h1>Deployed by Stoli</h1>
-      <Link href="/test">test</Link>
+      <Link href="/sets">Sets</Link>
+      <br></br>
+      <Link href="/terms">Form Test</Link>
       </main>
   )
 }
