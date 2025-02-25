@@ -4,9 +4,9 @@ import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { name, email, password } = await req.json();
 
-    if (!email || !password) {
+    if (!name || !email || !password) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
 
     const newUser = await db.user.create({
       data: {
+        name,
         email,
         hashedPassword,
           },

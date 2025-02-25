@@ -31,14 +31,31 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid password");
         }
 
-        return { id: user.id, email: user.email };
+        return { id: user.id, name: user.name, email: user.email };
       },
     }),
   ],
   session: {
-    strategy: "jwt" as SessionStrategy, // ✅ Explicitly cast "jwt" to SessionStrategy
+    strategy: "jwt" as SessionStrategy, 
   },
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name; // Store name in JWT
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.name = token.name; // Include name in session
+        session.user.email = token.email;
+      }
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

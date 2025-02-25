@@ -21,10 +21,12 @@ export default async function Dashboard() {
 
   return (
     <div>
-      <h1>Welcome, {session.user?.email}!</h1>
+      <h1>Welcome, {session.user?.name}!</h1>
       <form action="/api/auth/signout" method="POST">
         <button type="submit">Logout</button>
       </form>
+      <br></br>
+      <h1><Link href="/sets">My Sets</Link></h1>
     </div>
   );
 }
