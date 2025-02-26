@@ -20,3 +20,24 @@ model User {
   hashedPassword      String
   createdAt     DateTime @default(now())
 }
+
+model sets {
+  set_id   Int    @id @default(autoincrement())
+  user_id  String
+  set_name String
+}
+
+model Terms {
+  term_id    Int    @id @default(autoincrement())
+  user_id    String
+  term       String
+  definition String
+}
+
+model SetContent {
+  set_id  Int
+  term_id Int
+  order   Int
+
+  @@id([set_id, term_id])
+}
