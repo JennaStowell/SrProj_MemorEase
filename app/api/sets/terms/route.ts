@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db"; // Database connection
+import { db } from "@/lib/db"; 
 
 export async function POST(req: Request) {
     try {
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   
       let { setId, userId, term, definition, order } = body;
   
-      // Convert setId to an integer
+      
       setId = parseInt(setId, 10);
       if (isNaN(setId)) {
         console.error("Invalid setId:", setId);

@@ -26,3 +26,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || "Error creating set" }, { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
+
+    const sets = await db.sets.findMany({
+      where: { user_id: userId },
+    });
+
+    console.log("Fetched Sets:", sets);
+
+    return NextResponse.json(sets.length > 0 ? sets : [], { status: 200 });
+  } catch (error: any) {
+    console.error("Error fetching sets:", error.message || error);
+    return NextResponse.json({ error: error.message || "Error fetching sets" }, { status: 500 });
+  }
+}
