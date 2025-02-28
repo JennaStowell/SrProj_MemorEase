@@ -26,7 +26,8 @@ export default async function Dashboard() {
         <button type="submit">Logout</button>
       </form>
       <br></br>
-      <h1><Link href="/sets">My Sets</Link></h1>
+      <Link href="/mysets"><h1>My Sets</h1></Link> <Link href="/sets"><button> + Create Set </button></Link>
+      <p>display some recently made sets here</p>
     </div>
   );
 }
