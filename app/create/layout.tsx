@@ -5,10 +5,8 @@ import type { ReactNode } from "react";
 
 export default function SetLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body>
+    <div>
         <SessionProvider>{children}</SessionProvider>
-      </body>
-    </html>
+      </div>
   );
 }

@@ -29,7 +29,8 @@ export default function SetDetailsPage() {
     }
   };
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading" || !setDetails) return <p>Loading set details...</p>;
+
 
   return (
     <div>
