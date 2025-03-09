@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request, { params }: { params: { setId: string } }) {
+
+export async function GET(req: NextRequest, { params }: { params: { setId: string } }) {
+  const { setId } = params;
+
+  if (!setId) {
+    return NextResponse.json({ error: "Set ID is required" }, { status: 400 });
+  }
+
   try {
-    const { setId } = params;
-
-    if (!setId) {
-      return NextResponse.json({ error: "Missing setId" }, { status: 400 });
-    }
-
-    // Fetch set details
     const set = await db.sets.findUnique({
       where: { set_id: Number(setId) },
     });
@@ -18,7 +18,6 @@ export async function GET(req: Request, { params }: { params: { setId: string } 
       return NextResponse.json({ error: "Set not found" }, { status: 404 });
     }
 
-    // Fetch associated terms
     const terms = await db.terms.findMany({
       where: {
         term_id: {
@@ -34,7 +33,6 @@ export async function GET(req: Request, { params }: { params: { setId: string } 
 
     return NextResponse.json({ set, terms }, { status: 200 });
   } catch (error: any) {
-    console.error("Error fetching set details:", error.message || error);
     return NextResponse.json({ error: error.message || "Error fetching set details" }, { status: 500 });
   }
 }
