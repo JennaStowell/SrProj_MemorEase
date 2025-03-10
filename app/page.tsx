@@ -22,7 +22,16 @@ export default async function Dashboard() {
   return (
     <div style={{ padding: '20px' }}>
       {/* Top Navigation */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div 
+        style={{
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Add shadow under the navbar
+          padding: '10px 20px', // Added some padding for better appearance
+          backgroundColor: '#fff', // Optional: set a background color
+        }}
+      >
         <h1 style={{ fontFamily: 'cursive', fontSize: '36px' }}>Memorease</h1>
         <div>
           <span>{session.user?.name}</span>
@@ -31,7 +40,6 @@ export default async function Dashboard() {
           </form>
         </div>
       </div>
-
       <br />
 
       {/* My Sets Section */}

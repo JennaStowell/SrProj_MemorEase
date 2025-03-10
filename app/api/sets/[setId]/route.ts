@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest, { params }: { params: { setId: string } }) {
-  const { setId } = params;
+  const { setId } = await params;
 
   if (!setId) {
     return NextResponse.json({ error: "Set ID is required" }, { status: 400 });
