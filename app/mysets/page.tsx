@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 
 export default function MySetsPage() {
@@ -16,6 +16,21 @@ export default function MySetsPage() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editValues, setEditValues] = useState<{ term: string; definition: string }>({ term: "", definition: "" });
 
+  const fetchUserSets = useCallback(async () => {
+    if (!session?.user?.id) return;
+  
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/sets?userId=${session.user.id}`);
+      if (!res.ok) throw new Error("Failed to fetch user sets");
+      const data = await res.json();
+      setSets(data);
+    } catch (error) {
+      console.error("Error fetching user sets:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -23,21 +38,9 @@ export default function MySetsPage() {
     } else if (status === "authenticated" && session?.user?.id) {
       fetchUserSets();
     }
-  }, [status, session]);
-
-  const fetchUserSets = async () => {
-    setIsLoading(true); // Start loading
-    try {
-      const res = await fetch(`/api/sets?userId=${session?.user?.id}`);
-      if (!res.ok) throw new Error("Failed to fetch user sets"); // Handle HTTP errors
-      const data = await res.json();
-      setSets(data);
-    } catch (error) {
-      console.error("Error fetching user sets:", error);
-    } finally {
-      setIsLoading(false); // Stop loading regardless of success or failure
-    }
-  };
+  }, [status, session, router, fetchUserSets]);
+  
+  
   
   const fetchSetDetails = async (setId: number, setName: string) => {
     try {
@@ -85,7 +88,7 @@ export default function MySetsPage() {
           {/* Buttons above table */}
           <div className="mb-4 flex justify-center space-x-4">
             <button className="btn text-2xl py-4 px-8">Flashcards</button>
-            <button className="btn text-2xl py-4 px-8">Study</button>
+            <Link href={`/mysets/study?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Study</button></Link>
             <button className="btn text-2xl py-4 px-8">Test</button>
             <button className="btn text-2xl py-4 px-8">Matching</button>
           </div>
