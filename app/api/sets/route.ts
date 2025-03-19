@@ -40,8 +40,6 @@ export async function GET(req: Request) {
       where: { user_id: userId },
     });
 
-    console.log("Fetched Sets:", sets);
-
     return NextResponse.json(sets.length > 0 ? sets : [], { status: 200 });
   } catch (error: any) {
     console.error("Error fetching sets:", error.message || error);
