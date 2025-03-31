@@ -22,7 +22,7 @@ export default function TestPage() {
 
     const fetchTerms = async () => {
       try {
-        const res = await fetch(`/api/sets/${setId}`);
+        const res = await fetch(`/api/sets/details?setId=${setId}`);
         if (!res.ok) throw new Error("Failed to fetch terms");
         const data = await res.json();
         setTerms(data.terms);
