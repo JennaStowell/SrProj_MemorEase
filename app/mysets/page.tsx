@@ -89,7 +89,7 @@ export default function MySetsPage() {
           <div className="mb-4 flex justify-center space-x-4">
             <button className="btn text-2xl py-4 px-8">Flashcards</button>
             <Link href={`/mysets/study?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Study</button></Link>
-            <button className="btn text-2xl py-4 px-8">Test</button>
+            <Link href={`/mysets/test?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Test</button></Link>
             <button className="btn text-2xl py-4 px-8">Matching</button>
           </div>
           <br />
