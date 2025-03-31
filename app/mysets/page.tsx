@@ -17,12 +17,19 @@ export default function MySetsPage() {
   const [editValues, setEditValues] = useState<{ term: string; definition: string }>({ term: "", definition: "" });
 
   const fetchUserSets = useCallback(async () => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id) {
+      console.error("User ID is missing");
+      return;
+    }
   
     setIsLoading(true);
     try {
       const res = await fetch(`/api/sets?userId=${session.user.id}`);
-      if (!res.ok) throw new Error("Failed to fetch user sets");
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error fetching user sets:", errorData.error || "Unknown error");
+        throw new Error("Failed to fetch user sets");
+      }
       const data = await res.json();
       setSets(data);
     } catch (error) {
@@ -31,6 +38,7 @@ export default function MySetsPage() {
       setIsLoading(false);
     }
   }, [session?.user?.id]);
+  
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -44,7 +52,7 @@ export default function MySetsPage() {
   
   const fetchSetDetails = async (setId: number, setName: string) => {
     try {
-      const res = await fetch(`/api/sets/${setId}`);
+      const res = await fetch(`/api/sets/details?setId=${setId}`);
       if (!res.ok) throw new Error(`Failed to fetch set details for ID ${setId}`);
       const data = await res.json();
       setSelectedSet({ set_id: setId, set_name: setName });

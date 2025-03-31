@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -29,7 +29,7 @@ export default function StudyPage() {
 
     const fetchTerms = async () => {
       try {
-        const res = await fetch(`/api/sets/${setId}`);
+        const res = await fetch(`/api/sets/details?setId=${setId}`);
         if (!res.ok) throw new Error("Failed to fetch terms");
         const data = await res.json();
 
@@ -58,42 +58,42 @@ export default function StudyPage() {
     const correctAnswer = currentTerm.term.toLowerCase();
 
     if (normalizedInput === correctAnswer) {
-        setFeedback("correct");
-        setCorrectCount((prev) => ({
-          ...prev,
-          [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
-        }));
-      
-        setScore((prev) => ({
-          ...prev,
-          [currentTerm.term]: {
-            correct: (prev[currentTerm.term]?.correct || 0) + 1,
-            wrong: prev[currentTerm.term]?.wrong || 0,
-          },
-        }));
-      
-        setTimeout(() => {
-          setFeedback("");
-          setUserInput("");
-          if (correctCount[currentTerm.term] + 1 >= 2) {
-            setCurrentTermIndex((prev) => prev + 1);
-          }
-        }, 1000);
-      } else {
-        setFeedback("incorrect");
-        setAttempts((prev) => ({
-          ...prev,
-          [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
-        }));
-      
-        setScore((prev) => ({
-          ...prev,
-          [currentTerm.term]: {
-            correct: prev[currentTerm.term]?.correct || 0,
-            wrong: (prev[currentTerm.term]?.wrong || 0) + 1,
-          },
-        }));
-      }      
+      setFeedback("correct");
+      setCorrectCount((prev) => ({
+        ...prev,
+        [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
+      }));
+
+      setScore((prev) => ({
+        ...prev,
+        [currentTerm.term]: {
+          correct: (prev[currentTerm.term]?.correct || 0) + 1,
+          wrong: prev[currentTerm.term]?.wrong || 0,
+        },
+      }));
+
+      setTimeout(() => {
+        setFeedback("");
+        setUserInput("");
+        if (correctCount[currentTerm.term] + 1 >= 2) {
+          setCurrentTermIndex((prev) => prev + 1);
+        }
+      }, 1000);
+    } else {
+      setFeedback("incorrect");
+      setAttempts((prev) => ({
+        ...prev,
+        [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
+      }));
+
+      setScore((prev) => ({
+        ...prev,
+        [currentTerm.term]: {
+          correct: prev[currentTerm.term]?.correct || 0,
+          wrong: (prev[currentTerm.term]?.wrong || 0) + 1,
+        },
+      }));
+    }
   };
 
   useEffect(() => {
@@ -126,65 +126,63 @@ export default function StudyPage() {
       ))}
       <br></br>
       <Link href='/mysets'>
-  <button className="mt-4 p-2 bg-gray-200 rounded hover:bg-gray-300">
-    Back to My Set
-  </button>
-</Link>
-
+        <button className="mt-4 p-2 bg-gray-200 rounded hover:bg-gray-300">
+          Back to My Set
+        </button>
+      </Link>
     </>
   );
-  
 
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-maroon text-4xl font-bold mb-4 text-center">Study Session</h1>
-      {!chunkStarted ? (
-        <button
-          onClick={() => setChunkStarted(true)}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          Start Chunk {currentChunk + 1}
-        </button>
-      ) : !completedChunks.includes(currentChunk) ? (
-        <>
-          <h2 className="text-lg font-bold">Chunk {currentChunk + 1}</h2>
-          <p className="mb-2">Definition: {chunkedSets[currentChunk][currentTermIndex]?.definition}</p>
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                handleSubmit();
-                }
-            }}
-            className="border p-2 rounded w-full"
-            />
-          <button onClick={handleSubmit} className="mt-2 p-2 bg-blue-500 text-white rounded">
-            Submit
-          </button>
-          {feedback === "correct" && <p className="text-green-500">Correct!</p>}
-          {feedback === "incorrect" && <p className="text-red-500">Try again!</p>}
-        </>
-      ) : (
-        <div>
-          <p>Chunk {currentChunk + 1} completed!</p>
-          {/* <p> {currentTerm.term}: {score[currentTerm.term]?.correct || 0}/{score[currentTerm.term]?.correct + (score[currentTerm.term]?.wrong || 0)} - Wrong {score[currentTerm.term]?.wrong || 0} time(s)</p> */}
-          {chunkedSets[currentChunk]?.map(({ term }) => (
-            <p key={term}>
-                {term}: {score[term]?.correct || 0}/{(score[term]?.correct || 0) + (score[term]?.wrong || 0)} 
-                {score[term]?.wrong ? ` - Wrong ${score[term]?.wrong} time(s)` : ""}
-            </p>
-            ))}
-
+      <Suspense fallback={<div>Loading...</div>}>
+        {!chunkStarted ? (
           <button
             onClick={() => setChunkStarted(true)}
-            className="p-2 bg-gray-500 text-white rounded"
+            className="p-2 bg-green-500 text-white rounded"
           >
-            Start Chunk {currentChunk + 2}
+            Start Chunk {currentChunk + 1}
           </button>
-        </div>
-      )}
+        ) : !completedChunks.includes(currentChunk) ? (
+          <>
+            <h2 className="text-lg font-bold">Chunk {currentChunk + 1}</h2>
+            <p className="mb-2">Definition: {chunkedSets[currentChunk][currentTermIndex]?.definition}</p>
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
+              className="border p-2 rounded w-full"
+            />
+            <button onClick={handleSubmit} className="mt-2 p-2 bg-blue-500 text-white rounded">
+              Submit
+            </button>
+            {feedback === "correct" && <p className="text-green-500">Correct!</p>}
+            {feedback === "incorrect" && <p className="text-red-500">Try again!</p>}
+          </>
+        ) : (
+          <div>
+            <p>Chunk {currentChunk + 1} completed!</p>
+            {chunkedSets[currentChunk]?.map(({ term }) => (
+              <p key={term}>
+                {term}: {score[term]?.correct || 0}/{(score[term]?.correct || 0) + (score[term]?.wrong || 0)} 
+                {score[term]?.wrong ? ` - Wrong ${score[term]?.wrong} time(s)` : ""}
+              </p>
+            ))}
+            <button
+              onClick={() => setChunkStarted(true)}
+              className="p-2 bg-gray-500 text-white rounded"
+            >
+              Start Chunk {currentChunk + 2}
+            </button>
+          </div>
+        )}
+      </Suspense>
       <style jsx>{`
         .text-maroon {
           color: #800000;
