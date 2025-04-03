@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { Trash2 } from "lucide-react";
 
 export default function MySetsPage() {
   const { data: session, status } = useSession();
@@ -62,6 +63,39 @@ export default function MySetsPage() {
     }
   };
   
+  const handleDeleteSet = async (setId: number) => {
+    if (!session?.user?.id) {
+      console.error("User ID is missing");
+      return;
+    }
+  
+    const confirmDelete = confirm("Are you sure you want to delete this set?");
+    if (!confirmDelete) return;
+  
+    try {
+      const res = await fetch("/api/sets", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          setId,
+          userId: session.user.id,
+        }),
+      });
+  
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error deleting set:", errorData.error || "Unknown error");
+        return;
+      }
+  
+      // Remove the deleted set from state
+      setSets((prevSets) => prevSets.filter((set) => set.set_id !== setId));
+    } catch (error) {
+      console.error("Error deleting set:", error);
+    }
+  };
 
   const handleEdit = (index: number) => {
     setEditingIndex(index);
@@ -190,20 +224,31 @@ export default function MySetsPage() {
             <p>No sets created yet.</p>
           ) : (
             <ul>
-              {sets.map((set) => (
-                <li key={set.set_id} className="my-2 ml-6 flex items-center">
-                  <span className="text-maroon mr-3">&#9733;</span>
-                  <div>
-                    <button
-                      onClick={() => fetchSetDetails(set.set_id, set.set_name)}
-                      className="set-button py-6 px-12 text-2xl bg-white shadow-md rounded-lg hover:border-b-4 hover:border-maroon transition-all duration-300"
-                    >
-                      {set.set_name}
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+  {sets.map((set) => (
+    <li
+      key={set.set_id}
+      className="my-2 ml-6 flex items-center group" // Added 'group' to track hover state
+    >
+      <span className="text-maroon mr-3">&#9733;</span>
+      <div className="flex items-center">
+        <button
+          onClick={() => fetchSetDetails(set.set_id, set.set_name)}
+          className="set-button py-6 px-12 text-2xl bg-white shadow-md rounded-lg hover:border-b-4 hover:border-maroon transition-all duration-300"
+        >
+          {set.set_name}
+        </button>
+        <button
+          onClick={() => handleDeleteSet(set.set_id)}
+          className="opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-2 rounded-full text-black hover:bg-red-700"
+        >
+          <Trash2 className="w-5 h-5" /> {/* Trashcan icon */}
+        </button>
+      </div>
+    </li>
+  ))}
+</ul>
+
+
           )}
         </>
       )}
