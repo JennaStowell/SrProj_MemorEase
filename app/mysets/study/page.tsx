@@ -115,7 +115,7 @@ export default function StudyPage() {
     }
   }, [currentTermIndex, chunkedSets, currentChunk, completedChunks, attempts, chunkStarted]);
 
-  if (currentChunk >= chunkedSets.length) return (
+  if (!isLoading && currentChunk >= chunkedSets.length) return (
     <>
       <h2>Great job! See how you did: </h2>
       {chunkedSets.flat().map(({ term }) => (

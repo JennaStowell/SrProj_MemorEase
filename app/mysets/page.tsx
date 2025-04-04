@@ -132,7 +132,7 @@ export default function MySetsPage() {
           <Link href={`/mysets/flashcards?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Flashcards</button></Link>
             <Link href={`/mysets/study?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Study</button></Link>
             <Link href={`/mysets/test?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Test</button></Link>
-            <button className="btn text-2xl py-4 px-8">Matching</button>
+            <Link href={`/mysets/matching?setId=${selectedSet?.set_id}`} passHref><button className="btn text-2xl py-4 px-8">Matching</button></Link>
           </div>
           <br />
 
