@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface Card {
@@ -22,13 +22,13 @@ export default function MatchingGame() {
   const [columns, setColumns] = useState(4);
   const [gameStarted, setGameStarted] = useState(false); // Track game start
 
-  const fetchAndShuffleCards = async () => {
+  const fetchAndShuffleCards = useCallback(async () => {
     if (!setId) return;
     try {
       const res = await fetch(`/api/sets/details?setId=${setId}`);
       if (!res.ok) throw new Error("Failed to fetch terms");
       const data = await res.json();
-
+  
       const termCards = data.terms.map((t: any) => ({
         id: `t-${t.term}`,
         text: t.term,
@@ -41,22 +41,20 @@ export default function MatchingGame() {
         type: "definition",
         matched: false
       }));
-
+  
       const shuffledCards = [...termCards, ...definitionCards].sort(() => Math.random() - 0.5);
       setCards(shuffledCards);
       setColumns(shuffledCards.length > 24 ? 6 : 4);
       setMatches(0);
       setMisses(0);
       setSelectedCards([]);
-      setGameStarted(true); // Set game as started
+      setGameStarted(true);
     } catch (error) {
       console.error("Error fetching terms:", error);
     }
-  };
-
-  useEffect(() => {
-    fetchAndShuffleCards();
-  }, [setId]);
+  }, [setId]); // ← dependency here
+  
+  
 
   const handleCardClick = (card: Card) => {
     if (selectedCards.length === 2 || card.matched || selectedCards.includes(card)) return;

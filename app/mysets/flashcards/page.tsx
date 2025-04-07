@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function FlashcardPage() {
   const searchParams = useSearchParams();
   const setId = searchParams.get("setId");
+  const setName = searchParams.get('setName');
   const [terms, setTerms] = useState<{ term: string; definition: string }[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -43,7 +45,11 @@ export default function FlashcardPage() {
     setExpanded((prev) => !prev);
   };
 
-  if (terms.length === 0) return <p>Loading flashcards...</p>;
+  if (terms.length === 0) return (
+    <div className="flex justify-center items-center h-64">
+      <p className="text-xl text-gray-600">Loading your set...</p>
+    </div>
+  );
 
   const maxLength = 350; // Maximum length of text to display before "Read More"
   const definition = terms[currentIndex].definition;
@@ -83,7 +89,14 @@ export default function FlashcardPage() {
             🔄
         </button>
         </div>
-        <a href="/mysets" className="return-link">← Return to MySets</a>
+
+        <Link href={`/mysets/details?setId=${setId}`} className="return-link">
+  ← Return to Set Details
+</Link>
+
+
+
+
 
       <style jsx>{`
         .return-link {
