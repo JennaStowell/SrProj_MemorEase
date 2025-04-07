@@ -90,7 +90,7 @@ export default function MySetsPage() {
       <h1 className="text-4xl font-bold mb-6 text-center text-maroon">My Sets</h1>
 
       {sets.length === 0 ? (
-        <p className="text-center text-gray-600">You haven't created any sets yet.</p>
+        <p className="text-center text-gray-600">You haven&apos;t created any sets yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {sets.map((set) => (
