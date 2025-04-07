@@ -15,16 +15,17 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Invalid setId" }, { status: 400 });
     }
 
-    // Fetch the set details from the sets table
+    // Fetch the set's name
     const set = await db.sets.findUnique({
       where: { set_id: setIdNum },
+      select: { set_name: true },
     });
 
     if (!set) {
       return NextResponse.json({ error: `Set with ID ${setIdNum} not found` }, { status: 404 });
     }
 
-    // Fetch terms related to this set from the setContent and terms tables
+    // Fetch related terms
     const terms = await db.terms.findMany({
       where: {
         term_id: {
@@ -38,7 +39,7 @@ export async function GET(req: Request) {
       },
     });
 
-    return NextResponse.json({ set, terms }, { status: 200 });
+    return NextResponse.json({ setName: set.set_name, terms }, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching set details:", error.message || error);
     return NextResponse.json({ error: error.message || "Error fetching set details" }, { status: 500 });
