@@ -34,7 +34,7 @@ export async function GET(req: Request) {
               where: { set_id: setIdNum },
               select: { term_id: true },
             })
-          ).map((sc) => sc.term_id),
+          ).map((sc: { term_id: number }) => sc.term_id), // Explicitly type `sc` as having `term_id`
         },
       },
     });
