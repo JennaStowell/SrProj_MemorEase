@@ -53,6 +53,16 @@ export default function MatchingGame() {
       console.error("Error fetching terms:", error);
     }
   }, [setId]); // ← dependency here
+
+  useEffect(() => {
+    fetchAndShuffleCards();
+  }, [fetchAndShuffleCards]);
+  
+  useEffect(() => {
+    if (!setId) {
+      console.warn("Missing setId from URL");
+    }
+  }, [setId]);
   
   
 
