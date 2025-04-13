@@ -12,6 +12,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing userId or setName" }, { status: 400 });
     }
 
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 400 });
+    }
+
 
     const newSet = await db.sets.create({
       data: { user_id: userId, set_name: setName },

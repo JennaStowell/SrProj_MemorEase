@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 
+
 export default function MySetsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -72,23 +73,33 @@ export default function MySetsPage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 w-full">
       <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Add shadow under the navbar
-              padding: "10px 20px", // Added some padding for better appearance
-              backgroundColor: "#fff", // Optional: set a background color
-            }}
-          >
-            <Link href="/">
-              <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>Memorease</h1>
-            </Link>
-          </div>
-      <h1 className="text-4xl font-bold mb-6 text-center text-maroon">My Sets</h1>
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Add shadow under the navbar
+          padding: "10px 20px", // Added some padding for better appearance
+          backgroundColor: "#fff", // Optional: set a background color
+          width: "100%", // Ensures the container takes full width
+        }}
+      >
+        <Link href="/">
+          <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>Memorease</h1>
+        </Link>
+  
+        {/* Centered 'My Sets' */}
+        <h1 className="text-6xl font-bold text-maroon mx-auto">My Sets</h1>
+  
+        {/* Create emoticon on the right */}
+        <Link href="/create">
+        <span className="text-4xl cursor-pointer" role="img" aria-label="create study set">
+  ➕
+</span>
 
+        </Link>
+      </div>
       {sets.length === 0 ? (
         <p className="text-center text-gray-600">You haven&apos;t created any sets yet.</p>
       ) : (
