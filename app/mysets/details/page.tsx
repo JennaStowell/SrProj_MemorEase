@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function SetDetailsPage() {
@@ -9,11 +10,16 @@ export default function SetDetailsPage() {
   const router = useRouter();
   const setId = searchParams.get("setId");
 
+  const { data: session } = useSession();
+
   const [setName, setSetName] = useState<string>("");
   const [terms, setTerms] = useState<{ term: string; definition: string }[]>([]);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editValues, setEditValues] = useState<{ term: string; definition: string }>({ term: "", definition: "" });
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editValues, setEditValues] = useState({ term: "", definition: "" });
+  const [newTerm, setNewTerm] = useState({ term: "", definition: "" });
+  const [ownerId, setOwnerId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!setId) return;
@@ -22,9 +28,11 @@ export default function SetDetailsPage() {
       try {
         const res = await fetch(`/api/sets/details?setId=${setId}`);
         if (!res.ok) throw new Error("Failed to fetch terms");
+
         const data = await res.json();
         setTerms(data.terms);
-        setSetName(data.setName); // 👈 make sure your API returns this!
+        setSetName(data.setName);
+        setOwnerId(data.userId);  // Assuming `userId` is the ID of the set owner
       } catch (err) {
         console.error(err);
       } finally {
@@ -35,47 +43,115 @@ export default function SetDetailsPage() {
     fetchSetDetails();
   }, [setId]);
 
+  useEffect(() => {
+    if (ownerId && session?.user?.id !== ownerId) {
+      router.push("/mysets");  // Redirect if the user is not the owner
+    }
+  }, [ownerId, session, router]);
+
   const handleEdit = (index: number) => {
     setEditingIndex(index);
     setEditValues(terms[index]);
   };
 
-  const handleDelete = (index: number) => {
-    setTerms((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleSave = (index: number) => {
-    if (editingIndex === null) return;
+  const handleSave = async (index: number) => {
     const updated = [...terms];
     updated[index] = editValues;
     setTerms(updated);
     setEditingIndex(null);
+
+    const res = await fetch("/api/sets/terms", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setId, order: index + 1, ...editValues }),
+    });
+    if (!res.ok) {
+      console.error("Failed to save changes");
+    }
   };
 
-  if (loading) return (
-    <div className="flex justify-center items-center h-64">
-      <p className="text-xl text-gray-600">Loading your set...</p>
-    </div>
-  );
+  const handleDelete = async (index: number) => {
+    if (!confirm("Delete this term?")) return;
+    const updatedTerms = [...terms];
+    updatedTerms.splice(index, 1);
+    setTerms(updatedTerms);
+
+    await fetch("/api/sets/terms", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setId, order: index + 1 }),
+    });
+  };
+
+  const handleAddNewTerm = async () => {
+    if (!session || !session.user) {
+      console.error("User is not authenticated");
+      return;
+    }
+
+    const userId = session.user.id;
+
+    if (!newTerm.term.trim() || !newTerm.definition.trim()) return;
+
+    const newEntry = { ...newTerm, order: terms.length + 1, userId };
+
+    const res = await fetch("/api/sets/terms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setId, ...newEntry }),
+    });
+
+    if (res.ok) {
+      setTerms((prevTerms) => [...prevTerms, newEntry]);
+      setNewTerm({ term: "", definition: "" });
+    } else {
+      console.error("Failed to add term:", await res.json());
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-xl text-gray-600">Loading your set...</p>
+      </div>
+    );
+  }
+
   if (!setId) return <p>Missing set ID.</p>;
 
   return (
     <div>
-      <div className="flex justify-center w-full p-4">
-        <h1 className="text-maroon text-5xl font-bold mx-auto">{setName}</h1>
+      {/* Display the username at the top */}
+      <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
+        padding: "10px 20px", // Added some padding for better appearance
+        backgroundColor: "#fff", // Optional: set a background color
+        width: "100%", // Ensures the container takes full width
+      }}>
+        <h1 className="text-maroon text-5xl font-bold">Set: {setName}</h1>
+        {session?.user?.name && (
+          <div className="text-lg text-gray-600">
+            <span>{session.user.name}!</span>
+          </div>
+        )}
       </div>
 
-      <hr className="border border-gray-300 my-4" />
+      
 
       <div className="mb-4 flex justify-center space-x-4">
-        <Link href={`/mysets/flashcards?setId=${setId}`}><button className="btn text-2xl py-4 px-8">Flashcards</button></Link>
-        <Link href={`/mysets/study?setId=${setId}`}><button className="btn text-2xl py-4 px-8">Study</button></Link>
-        <Link href={`/mysets/test?setId=${setId}`}><button className="btn text-2xl py-4 px-8">Test</button></Link>
-        <Link href={`/mysets/matching?setId=${setId}`}><button className="btn text-2xl py-4 px-8">Matching</button></Link>
+        {["flashcards", "study", "test", "matching"].map((mode) => (
+          <Link key={mode} href={`/mysets/${mode}?setId=${setId}`}>
+            <button className="btn text-2xl py-4 px-8 capitalize">{mode}</button>
+          </Link>
+        ))}
       </div>
 
       {terms.length === 0 ? (
-        <p>No terms added yet.</p>
+        <p className="text-center text-gray-600">No terms added yet.</p>
       ) : (
         <div className="bg-white rounded-lg shadow-lg p-6 mx-auto my-6 w-full max-w-4xl">
           <table className="w-full border-collapse border border-gray-300">
@@ -90,39 +166,90 @@ export default function SetDetailsPage() {
               {terms.map((term, index) => (
                 <tr key={index} className="group border border-gray-300 hover:bg-gray-100">
                   <td className="p-2">
-                    {editingIndex === index ? (
-                      <input className="border p-1 w-full" value={editValues.term} onChange={(e) => setEditValues({ ...editValues, term: e.target.value })} />
+                    {editMode && editingIndex === index ? (
+                      <input
+                        className="border p-1 w-full"
+                        value={editValues.term}
+                        onChange={(e) => setEditValues({ ...editValues, term: e.target.value })}
+                      />
                     ) : (
                       term.term
                     )}
                   </td>
                   <td className="p-2">
-                    {editingIndex === index ? (
-                      <input className="border p-1 w-full" value={editValues.definition} onChange={(e) => setEditValues({ ...editValues, definition: e.target.value })} />
+                    {editMode && editingIndex === index ? (
+                      <input
+                        className="border p-1 w-full"
+                        value={editValues.definition}
+                        onChange={(e) =>
+                          setEditValues({ ...editValues, definition: e.target.value })
+                        }
+                      />
                     ) : (
                       term.definition
                     )}
                   </td>
-                  <td className="p-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {editingIndex === index ? (
-                      <button className="btn" onClick={() => handleSave(index)}>Save</button>
-                    ) : (
-                      <>
-                        <button className="btn" onClick={() => handleEdit(index)}>Edit</button>
-                        <button className="btn" onClick={() => handleDelete(index)}>Delete</button>
-                      </>
-                    )}
+                  <td className="p-2 flex space-x-2">
+                    {editMode &&
+                      (editingIndex === index ? (
+                        <button className="btn" onClick={() => handleSave(index)}>
+                          Save
+                        </button>
+                      ) : (
+                        <>
+                          <button className="btn" onClick={() => handleEdit(index)}>
+                            Edit
+                          </button>
+                          <button className="btn" onClick={() => handleDelete(index)}>
+                            Delete
+                          </button>
+                        </>
+                      ))}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {editMode && (
+            <div className="flex space-x-2 mt-4">
+              <input
+                type="text"
+                placeholder="New Term"
+                value={newTerm.term}
+                onChange={(e) => setNewTerm({ ...newTerm, term: e.target.value })}
+                className="border p-2 w-1/2"
+              />
+              <input
+                type="text"
+                placeholder="New Definition"
+                value={newTerm.definition}
+                onChange={(e) => setNewTerm({ ...newTerm, definition: e.target.value })}
+                className="border p-2 w-1/2"
+              />
+              <button className="btn" onClick={handleAddNewTerm}>
+                Add
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      <button onClick={() => router.push("/mysets")} className="mt-4 p-2 bg-gray-200 rounded hover:bg-gray-300">
-        Back to All Sets
-      </button>
+      <div className="mt-6 flex justify-center space-x-4">
+        <button
+          onClick={() => setEditMode(!editMode)}
+          className={`p-2 rounded text-white ${editMode ? "bg-gray-500 hover:bg-gray-600" : "bg-blue-600 hover:bg-blue-700"}`}
+        >
+          {editMode ? "Done Editing" : "Edit Set"}
+        </button>
+
+        <button
+          onClick={() => router.push("/mysets")}
+          className="p-2 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          Back to All Sets
+        </button>
+      </div>
 
       <style jsx>{`
         .btn {
