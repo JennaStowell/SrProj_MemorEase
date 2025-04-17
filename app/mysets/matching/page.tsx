@@ -68,13 +68,17 @@ export default function MatchingGame() {
 
   const handleCardClick = (card: Card) => {
     if (selectedCards.length === 2 || card.matched || selectedCards.includes(card)) return;
-
+  
     const newSelected = [...selectedCards, card];
     setSelectedCards(newSelected);
-
+  
     if (newSelected.length === 2) {
       const [first, second] = newSelected;
-      if (first.type !== second.type && first.id.split("-")[1] === second.id.split("-")[1]) {
+  
+      const firstBase = first.id.split("-")[1];
+      const secondBase = second.id.split("-")[1];
+  
+      if (first.type !== second.type && firstBase === secondBase) {
         setTimeout(() => {
           setCards((prev) =>
             prev.map((c) =>
@@ -83,7 +87,7 @@ export default function MatchingGame() {
           );
           setMatches((m) => m + 1);
         }, 1000);
-
+  
         setTimeout(() => {
           setSelectedCards([]);
         }, 1500);
@@ -95,23 +99,25 @@ export default function MatchingGame() {
       }
     }
   };
+  
+  
 
   return (
     <div className="game-container">
       <h2>Find a match!</h2>
       <div className="grid" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className={`card ${card.matched ? "matched" : ""} ${selectedCards.includes(card) ? "flipped" : ""}`}
-            onClick={() => handleCardClick(card)}
-          >
-            <div className="card-inner">
-              <div className="card-front">❔</div>
-              <div className="card-back">{card.matched ? "✅" : card.text}</div>
-            </div>
-          </div>
-        ))}
+      {cards.map((card, index) => (
+  <div
+    key={`${card.type}-${card.text}-${index}`} // Combine type, text, and index for uniqueness
+    className={`card ${card.matched ? "matched" : ""} ${selectedCards.includes(card) ? "flipped" : ""}`}
+    onClick={() => handleCardClick(card)}
+  >
+    <div className="card-inner">
+      <div className="card-front">❔</div>
+      <div className="card-back">{card.matched ? "✅" : card.text}</div>
+    </div>
+  </div>
+))}
       </div>
       <div className="scoreboard">
         <p>Matched: {matches}</p>
