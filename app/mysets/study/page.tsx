@@ -134,17 +134,25 @@ export default function StudyPage() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-maroon text-4xl font-bold mb-4 text-center">Study Session</h1>
-      <Suspense fallback={<div>Loading...</div>}>
-        {!chunkStarted ? (
+    <div className="min-h-screen w-full bg-white ">
+  <div className="w-full flex justify-center p-6">
+  <div className="max-w-3xl w-full ">
+    <h1 className="text-maroon text-4xl font-bold mb-4 text-center">Study Session</h1><br></br>
+    <Suspense fallback={<div>Loading...</div>}>
+      {!chunkStarted ? (
+        <div className="flex flex-col items-center space-y-6 mt-8">
+          <h2 className="text-xl text-center shadow-md p-4 rounded bg-white">
+            We&rsquo;ve chunked your study set into four sections. Get each term correct twice to move on!
+          </h2>
+          <br></br>
           <button
             onClick={() => setChunkStarted(true)}
-            className="p-2 bg-green-500 text-white rounded"
+            className="p-2 px-6 bg-green-500 text-white rounded shadow hover:bg-green-600 transition"
           >
             Start Chunk {currentChunk + 1}
           </button>
-        ) : !completedChunks.includes(currentChunk) ? (
+        </div>
+      ) : !completedChunks.includes(currentChunk) ? (
           <>
             <h2 className="text-lg font-bold">Chunk {currentChunk + 1}</h2>
             <p className="mb-2">Definition: {chunkedSets[currentChunk][currentTermIndex]?.definition}</p>
@@ -183,11 +191,13 @@ export default function StudyPage() {
           </div>
         )}
       </Suspense>
+      </div>
       <style jsx>{`
         .text-maroon {
           color: #800000;
         }
       `}</style>
+    </div>
     </div>
   );
 }
