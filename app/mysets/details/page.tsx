@@ -4,6 +4,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Button, ButtonGroup } from "flowbite-react";
+import { Dropdown, DropdownItem } from "flowbite-react";
 
 export default function SetDetailsPage() {
   const searchParams = useSearchParams();
@@ -121,17 +123,17 @@ export default function SetDetailsPage() {
 
   return (
     <div>
-      {/* Display the username at the top */}
+      {/* Header Section */}
       <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
-        padding: "10px 20px", // Added some padding for better appearance
-        backgroundColor: "#fff", // Optional: set a background color
-        width: "100%", // Ensures the container takes full width
-      }}>
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
+          padding: "10px 20px", // Added some padding for better appearance
+          backgroundColor: "#fff", // Optional: set a background color
+          width: "100%", // Ensures the container takes full width
+        }}>
         <h1 className="text-maroon text-5xl font-bold">Set: {setName}</h1>
         {session?.user?.name && (
           <div className="text-lg text-gray-600">
@@ -139,17 +141,34 @@ export default function SetDetailsPage() {
           </div>
         )}
       </div>
+      <br></br>
 
-      
+      <div className="mb-4 flex items-center justify-between w-full">
+        <ButtonGroup>
+        <Button
+          color="alternative"
+          onClick={() => setEditMode(!editMode)}
+          className={`m-2 text-xl px-6 py-3 ${editMode ? "bg-gray-200 hover:text-red-800" : "bg-white hover:text-red-800"}`}
+        >{editMode ? "Done Editing" : "Edit Set"}</Button>
+          <Button color="alternative" className="m-2 text-xl px-6 py-3">Share Set</Button>
+        </ButtonGroup>
 
-      <div className="mb-4 flex justify-center space-x-4">
-        {["flashcards", "study", "test", "matching"].map((mode) => (
-          <Link key={mode} href={`/mysets/${mode}?setId=${setId}`}>
-            <button className="btn text-2xl py-4 px-8 capitalize">{mode}</button>
-          </Link>
-        ))}
+        {/* Study Mode Dropdown centered */}
+        <div className="mx-auto">
+          <Dropdown label="Study Modes" dismissOnClick={false} color="Gray" className="text-red-800">
+            {["flashcards", "study", "test", "matching"].map((mode) => (
+              <DropdownItem key={mode} className="text-5xl py-6 px-8">
+                <Link href={`/mysets/${mode}?setId=${setId}`} className="text-2xl">
+                  {mode}
+                </Link>
+              </DropdownItem>
+            ))}
+          </Dropdown>
+        </div>
       </div>
+      <br></br>
 
+      {/* Terms Table */}
       {terms.length === 0 ? (
         <p className="text-center text-gray-600">No terms added yet.</p>
       ) : (
@@ -236,12 +255,6 @@ export default function SetDetailsPage() {
       )}
 
       <div className="mt-6 flex justify-center space-x-4">
-        <button
-          onClick={() => setEditMode(!editMode)}
-          className={`p-2 rounded text-white ${editMode ? "bg-gray-500 hover:bg-gray-600" : "bg-blue-600 hover:bg-blue-700"}`}
-        >
-          {editMode ? "Done Editing" : "Edit Set"}
-        </button>
 
         <button
           onClick={() => router.push("/mysets")}
