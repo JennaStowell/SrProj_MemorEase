@@ -1,17 +1,20 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { Suspense } from "react";
 
-export default function HomeLayout({
+export default function StudyDetailsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <SessionProvider>
-      <div className="home-layout">
+      <Suspense>
+      <div className="study-layout">
         {children}
       </div>
+      </Suspense>
     </SessionProvider>
   );
 }

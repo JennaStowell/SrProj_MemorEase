@@ -85,13 +85,26 @@ export default function SetDetailsPage() {
     });
   };
 
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/study/details?setId=${setId}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch((err) => {
+      console.error("Failed to copy:", err);
+      alert("Failed to copy link.");
+    });
+  };
+  
+
   const handleAddNewTerm = async () => {
     if (!session || !session.user) {
       console.error("User is not authenticated");
       return;
     }
+    
 
     const userId = session.user.id;
+    
 
     if (!newTerm.term.trim() || !newTerm.definition.trim()) return;
 
@@ -123,18 +136,17 @@ export default function SetDetailsPage() {
 
   return (
     <div>
-      {/* Header Section */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
-          padding: "10px 20px", // Added some padding for better appearance
-          backgroundColor: "#fff", // Optional: set a background color
-          width: "100%", // Ensures the container takes full width
+          padding: "10px 20px", 
+          backgroundColor: "#fff", 
+          width: "100%", 
         }}>
-        <h1 className="text-maroon text-5xl font-bold">Set: {setName}</h1>
+        <h1 className="text-maroon text-5xl font-bold" style={ {fontFamily: "cursive"} }>Set: {setName}</h1>
         {session?.user?.name && (
           <div className="text-lg text-gray-600">
             <span>{session.user.name}!</span>
@@ -149,30 +161,37 @@ export default function SetDetailsPage() {
           color="alternative"
           onClick={() => setEditMode(!editMode)}
           className={`m-2 text-xl px-6 py-3 ${editMode ? "bg-gray-200 hover:text-red-800" : "bg-white hover:text-red-800"}`}
-        >{editMode ? "Done Editing" : "Edit Set"}</Button>
-          <Button color="alternative" className="m-2 text-xl px-6 py-3">Share Set</Button>
+        >{editMode ? "Done Editing" : "Edit Set"}
+        </Button>
+        <Button
+  color="alternative"
+  className="m-2 text-xl px-6 py-3 bg-white hover:text-red-800"
+  onClick={() => handleShare()}
+>
+  Share Set
+</Button>
+
         </ButtonGroup>
 
-        {/* Study Mode Dropdown centered */}
         <div className="mx-auto">
-          <Dropdown label="Study Modes" dismissOnClick={false} color="Gray" className="text-red-800">
-            {["flashcards", "study", "test", "matching"].map((mode) => (
-              <DropdownItem key={mode} className="text-5xl py-6 px-8">
-                <Link href={`/mysets/${mode}?setId=${setId}`} className="text-2xl">
-                  {mode}
-                </Link>
-              </DropdownItem>
-            ))}
+        <Dropdown label="Study Modes" dismissOnClick={false} color="alternative" className="text-red-800 text-7x1">
+            {["Flashcards", "Study", "Test", "Matching"].map((mode) => (
+          <DropdownItem key={mode} className="text-5xl py-6 px-8">
+            <Link href={`/mysets/${mode.toLowerCase()}?setId=${setId}`} className="text-2xl">
+              {mode}
+            </Link>
+          </DropdownItem>
+        ))}
           </Dropdown>
         </div>
       </div>
       <br></br>
 
-      {/* Terms Table */}
       {terms.length === 0 ? (
         <p className="text-center text-gray-600">No terms added yet.</p>
       ) : (
-        <div className="bg-white rounded-lg shadow-lg p-6 mx-auto my-6 w-full max-w-4xl">
+        <div className="flex justify-center">
+  <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
@@ -251,6 +270,7 @@ export default function SetDetailsPage() {
               </button>
             </div>
           )}
+        </div>
         </div>
       )}
 

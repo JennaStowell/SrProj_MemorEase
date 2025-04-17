@@ -125,7 +125,7 @@ export default function StudyPage() {
         </p>
       ))}
       <br></br>
-      <Link href='/mysets/details?setId=${setId}'>
+      <Link href='/study/details?setId=${setId}'>
         <button className="mt-4 p-2 bg-gray-200 rounded hover:bg-gray-300">
           Back to My Set
         </button>

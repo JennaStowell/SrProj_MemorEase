@@ -52,7 +52,7 @@ export default function MatchingGame() {
     } catch (error) {
       console.error("Error fetching terms:", error);
     }
-  }, [setId]); // ← dependency here
+  }, [setId]); 
 
   useEffect(() => {
     fetchAndShuffleCards();
@@ -125,7 +125,7 @@ export default function MatchingGame() {
       </div>
       {gameStarted && matches * 2 === cards.length && (
         <div className="buttons">
-          <button className="return-button" onClick={() => router.push('/mysets/details?setId=${setId}')}>
+          <button className="return-button" onClick={() => router.push("/study/details?setId=${setId}")}>
             Return to My Sets
           </button>
           <button className="play-again-button" onClick={fetchAndShuffleCards}>
