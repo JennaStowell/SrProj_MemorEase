@@ -89,15 +89,22 @@ export default function MySetsPage() {
           <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>Memorease</h1>
         </Link>
   
-        {/* Centered 'My Sets' */}
+       
         <h1 className="text-6xl font-bold text-maroon mx-auto">My Sets</h1>
   
-        {/* Create emoticon on the right */}
+        
         <Link href="/create">
-        <span className="text-4xl cursor-pointer" role="img" aria-label="create study set">
-  ➕
-</span>
-
+        <svg
+  xmlns="http://www.w3.org/2000/svg"
+  className="w-8 h-8 text-black cursor-pointer hover:text-gray-700"
+  fill="none"
+  viewBox="0 0 24 24"
+  stroke="currentColor"
+  role="img"
+  aria-label="create study set"
+>
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+</svg>
         </Link>
       </div>
       <br></br> <br></br> <br></br>

@@ -101,7 +101,7 @@ export default function TestPage() {
         <h1 className="text-3xl font-bold mb-4">Select Test Type</h1>
         <button className="btn" onClick={() => setTestType("multiple-choice")}>Multiple Choice</button>
         <button className="btn mt-2" onClick={() => setTestType("written")}>Written Answer</button>
-        <button className="btn mt-4" onClick={() => router.push("/mysets/details?setId=${setId}")}>Need to keep studying?</button>
+        <button className="btn mt-4" onClick={() => router.push("/study/details?setId=${setId}")}>Need to keep studying?</button>
       </div>
     );
   }
@@ -125,7 +125,7 @@ export default function TestPage() {
         </div>
 
         <button className="btn mt-4" onClick={restartTest}>Retry</button>
-        <button className="btn mt-2" onClick={() => router.push("/mysets/details?setId=${setId}")}>Need to keep studying?</button>
+        <button className="btn mt-2" onClick={() => router.push("/study/details?setId=${setId}")}>Need to keep studying?</button>
       </div>
     );
   }
