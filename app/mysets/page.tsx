@@ -90,7 +90,7 @@ export default function MySetsPage() {
         </Link>
   
        
-        <h1 className="text-6xl font-bold text-maroon mx-auto">My Sets</h1>
+        <h1 className="text-6xl font-bold text-maroon mx-auto" style= {{fontFamily: "cursive"}} >My Sets</h1>
   
         
         <Link href="/create">
