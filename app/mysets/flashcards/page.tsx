@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function FlashcardPage() {
   const searchParams = useSearchParams();
   const setId = searchParams.get("setId");
-  const setName = searchParams.get('setName');
+  const [setName, setSetName] = useState<string>("");
   const [terms, setTerms] = useState<{ term: string; definition: string }[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -21,6 +21,7 @@ export default function FlashcardPage() {
         if (!res.ok) throw new Error("Failed to fetch terms");
         const data = await res.json();
         setTerms(data.terms);
+        setSetName(data.setName);
       } catch (error) {
         console.error("Error fetching terms:", error);
       }
@@ -55,7 +56,32 @@ export default function FlashcardPage() {
   const definition = terms[currentIndex].definition;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
+          padding: "10px 20px", 
+          backgroundColor: "#fff", 
+          width: "100%", 
+          position: "sticky",  
+          top: 0,
+          zIndex: 10,  
+        }}
+      >
+        <h1 className="text-red-900 text-5xl font-bold" style={{ fontFamily: "cursive" }}>
+          Set: {setName}
+        </h1>
+
+        <div className="text-lg text-gray-600">
+          <Link href={`/mysets/details?setId=${setId}`} className="return-link">
+            Exit 
+          </Link>
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div
         className="flashcard-container"
         onMouseEnter={() => !expanded && toggleFlip()} // Prevent flip if expanded
@@ -77,26 +103,20 @@ export default function FlashcardPage() {
           </div>
         </div>
       </div>
+      <br></br>
 
       <div className="mt-6 flex space-x-4">
         <button onClick={prevCard} className="btn">← Previous</button>
         <button onClick={nextCard} className="btn">Next →</button>
       </div>
 
-      {/* New gray button for flipping the card */}
       <div className="mt-4">
         <button onClick={toggleFlip} aria-label="Flip card">
             🔄
         </button>
         </div>
 
-        <Link href={`/mysets/details?setId=${setId}`} className="return-link">
-  ← Return to Set Details
-</Link>
-
-
-
-
+        </div>
 
       <style jsx>{`
         .return-link {

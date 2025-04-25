@@ -192,6 +192,7 @@ export default function SetDetailsPage() {
       ) : (
         <div className="flex justify-center">
   <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
+  <br></br><br></br>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
