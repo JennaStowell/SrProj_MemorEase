@@ -39,7 +39,7 @@ model SetContent {
   term_id Int
   order   Int
   sets    sets  @relation(fields: [set_id], references: [set_id])
-  Terms   Terms @relation(fields: [term_id], references: [term_id])
+  Terms   Terms @relation(fields: [term_id], references: [term_id], onDelete: Cascade)
 
   @@id([set_id, term_id])
 }
