@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button, ButtonGroup } from "flowbite-react";
 import { Dropdown, DropdownItem } from "flowbite-react";
 
+
 export default function SetDetailsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function SetDetailsPage() {
   const { data: session } = useSession();
 
   const [setName, setSetName] = useState<string>("");
-  const [terms, setTerms] = useState<{ term: string; definition: string }[]>([]);
+  const [terms, setTerms] = useState<{ term: string; definition: string; term_id: number;}[]>([]);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -34,7 +35,7 @@ export default function SetDetailsPage() {
         const data = await res.json();
         setTerms(data.terms);
         setSetName(data.setName);
-        setOwnerId(data.userId);  // Assuming `userId` is the ID of the set owner
+        setOwnerId(data.userId);  
       } catch (err) {
         console.error(err);
       } finally {
@@ -58,7 +59,7 @@ export default function SetDetailsPage() {
 
   const handleSave = async (index: number) => {
     const updated = [...terms];
-    updated[index] = editValues;
+    updated[index] = {...editValues, term_id: terms[index].term_id };
     setTerms(updated);
     setEditingIndex(null);
 
@@ -74,16 +75,34 @@ export default function SetDetailsPage() {
 
   const handleDelete = async (index: number) => {
     if (!confirm("Delete this term?")) return;
-    const updatedTerms = [...terms];
-    updatedTerms.splice(index, 1);
-    setTerms(updatedTerms);
-
-    await fetch("/api/sets/terms", {
+  
+    const res = await fetch("/api/sets/terms", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ setId, order: index + 1 }),
+      body: JSON.stringify({ 
+        setId, 
+        termId: terms[index].term_id, 
+      }),
     });
+  
+    if (res.ok) {
+      try {
+        
+        const updatedRes = await fetch(`/api/sets/details?setId=${setId}`);
+        if (!updatedRes.ok) throw new Error("Failed to fetch updated terms");
+  
+        const data = await updatedRes.json();
+        setTerms(data.terms); 
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      console.error("Failed to delete term");
+    }
   };
+  
+  
+  
 
   const handleShare = () => {
     const shareUrl = `${window.location.origin}/study/details?setId=${setId}`;
@@ -101,28 +120,35 @@ export default function SetDetailsPage() {
       console.error("User is not authenticated");
       return;
     }
-    
-
+  
     const userId = session.user.id;
-    
-
+  
     if (!newTerm.term.trim() || !newTerm.definition.trim()) return;
-
+  
     const newEntry = { ...newTerm, order: terms.length + 1, userId };
-
+  
     const res = await fetch("/api/sets/terms", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ setId, ...newEntry }),
     });
-
+  
     if (res.ok) {
-      setTerms((prevTerms) => [...prevTerms, newEntry]);
-      setNewTerm({ term: "", definition: "" });
+      // ❗ Fetch updated terms instead of adding manually
+      try {
+        const updatedRes = await fetch(`/api/sets/details?setId=${setId}`);
+        if (!updatedRes.ok) throw new Error("Failed to fetch updated terms");
+        const data = await updatedRes.json();
+        setTerms(data.terms); // Now terms are guaranteed to match { term, definition, term_id }
+        setNewTerm({ term: "", definition: "" });
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       console.error("Failed to add term:", await res.json());
     }
   };
+  
 
   if (loading) {
     return (
