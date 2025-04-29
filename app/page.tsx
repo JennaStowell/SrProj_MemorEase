@@ -15,6 +15,8 @@ export default async function Dashboard() {
 
   if (!session) {
     return (
+      <div className="min-h-screen flex flex-col">
+      <main className="flex-grow px-5 py-5">
       <div style={{ padding: '20px' }}>
         {/* Top Navigation */}
         <div 
@@ -61,6 +63,7 @@ export default async function Dashboard() {
               </button>
             </Link>
           </div>
+        </div>
         </div>
         <br />
       <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
@@ -120,39 +123,24 @@ export default async function Dashboard() {
 </div>
       </Carousel>
     </div>
-    <br></br>
-    <div className="bg-white dark:bg-gray-700 text-left p-10">
-  <div className="flex flex-wrap justify-center gap-10">
-    {/* Testimonial 1 */}
-    <div className="w-1/2 sm:w-1/4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg relative">
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-white dark:bg-gray-800 rotate-45"></div>
-      <p className="text-lg mb-4 p-6 relative z-10">&quot;MemorEase helped me retain information like never before! The study modes are so engaging and effective.&quot;</p>
-      <p className="font-semibold">John Doe</p>
+</main>
+    <div>
+    <footer className="bg-gray-100 text-gray-800 py-8 px-4">
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+      <div className="flex items-center space-x-3">
+        <img src='images/MemorEase_Logo_NoWords.png' alt="Memorease Logo" className="h-10 w-10 object-contain" />
+        <span className="text-1xl font-system-ui text-black">Memorease</span>
+      </div>
+      <div className="text-center md:text-left text-sm text-gray-700">
+        <p>Created by Jenna Stowell</p>
+        <p>Contact: (603) 260-1440</p>
+      </div>
+      <div className="text-sm text-gray-500">
+        &copy; {new Date().getFullYear()} Memorease. All rights reserved.
+      </div>
     </div>
-    
-    {/* Testimonial 2 */}
-    <div className="w-1/2 sm:w-1/4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg relative">
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-white dark:bg-gray-800 rotate-45"></div>
-      <p className="text-lg mb-4 p-6 relative z-10">&quot;As a teacher, I love how my students can track their progress and even receive certificates!&quot;</p>
-      <p className="font-semibold">Jane Smith</p>
-    </div>
-
-    {/* Testimonial 3 */}
-    <div className="w-1/2 sm:w-1/4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg relative">
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-white dark:bg-gray-800 rotate-45"></div>
-      <p className="text-lg mb-4 p-6 relative z-10">&quot;MemorEase made studying fun and easy. The card matching game is an awesome way to reinforce learning!&quot;</p>
-      <p className="font-semibold">Emily Watson</p>
-    </div>
-
-    {/* Testimonial 4 */}
-    <div className="w-1/2 sm:w-1/4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg relative">
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 w-6 h-6 bg-white dark:bg-gray-800 rotate-45"></div>
-      <p className="text-lg mb-4 p-6 relative z-10">&quot;The study modes are great for both visual and auditory learners. I’ve improved my retention so much!&quot;</p>
-      <p className="font-semibold">Michael Brown</p>
-    </div>
-  </div>
-</div>
-
+  </footer> 
+  </div>   
     </div>
     
     );}}

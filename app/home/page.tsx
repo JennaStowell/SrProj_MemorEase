@@ -91,7 +91,7 @@ export default function HomePage() {
             <div className="flex justify-center">
               {randomSets.length === 0 ? (
                 <p className="text-gray-600">
-                  No sets available yet. <span><Link href='/create'>Try creating one!</Link></span>
+                  No sets available yet. <span className="underline text-blue-500"><Link href='/create'>Try creating one!</Link></span>
                 </p>
               ) : (
                 <div className="flex gap-4 flex-wrap">
@@ -135,7 +135,7 @@ export default function HomePage() {
           <div>
             <br /><br /><br />
             <div className="flex justify-center">
-              <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Public Sets</h2>
+              <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Shared With Me</h2>
             </div>
             <div className="flex justify-center" style={{ display: 'flex', gap: '20px' }}>
               {[...Array(3)].map((_, index) => (
@@ -143,7 +143,7 @@ export default function HomePage() {
                   <div className="flip-card">
                     <div className="flip-card-inner">
                       <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
-                        <span className="text-sm font-semibold">Public Set {index + 1}</span>
+                        <span className="text-sm font-semibold">Set {index + 1}</span>
                       </div>
                       <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
                         <span className="text-sm text-red-800 font-semibold">Click to Study</span>
