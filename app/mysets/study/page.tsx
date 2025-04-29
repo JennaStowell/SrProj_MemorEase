@@ -234,7 +234,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
   if (!isLoading && currentChunk >= chunkedSets.length)
     return (
       <div className="flex flex-col items-center mt-24 text-center px-6">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">Performance Breakdown</h2>
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Performance Breakdown</h2><br></br><br></br>
   
         <div className="w-full max-w-2xl space-y-4">
           {chunkedSets.flat().map(({ term }) => {
@@ -268,6 +268,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
             );
           })}
         </div>
+        <br></br>
   
         <div className="mt-10 flex flex-wrap gap-4">
           {!isLoading && (
@@ -286,17 +287,41 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
           </Link>
         </div>
       </div>
+      
     );
 
   return (
     <div className="min-h-screen w-full bg-white ">
-  <div className="w-full flex justify-center p-6">
-  <div className="max-w-3xl w-full ">
-    <h1 className="text-maroon text-4xl font-bold mb-4 text-center">Study Session</h1><br></br>
+      <nav><div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        padding: "10px 20px",
+        backgroundColor: "#fff",
+        width: "100%",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}
+    >
+      <h1 className="text-black text-3xl font-system-ui" style={{ fontFamily: "cursive" }}>
+        MemorEase
+      </h1>
+      <Link href={`/mysets/details?setId=${setId}`} className="text-gray-200 underline">
+        Exit
+      </Link>
+    </div></nav><br></br> <br></br>
+
+  <div className="w-full flex justify-center p-6 ">
+  <div className="max-w-3xl w-full border-2 rounded-2xl border-white shadow-xl p-6">
+    
+    <h1 className="text-maroon text-4xl font-system-ui mb-4 text-center">Study Session</h1><br></br>
     <Suspense fallback={<div>Loading...</div>}>
       {!chunkStarted ? (
         <div className="flex flex-col items-center space-y-6 mt-8">
-          <h2 className="text-xl text-center shadow-md p-4 rounded bg-white">
+          <h2 className="text-xl text-center p-4 rounded bg-white">
             We&rsquo;ve chunked your study set into four sections. Get each term correct twice to move on!
           </h2>
           <br></br>
@@ -309,14 +334,15 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
         </div>
       ) : !completedChunks.includes(currentChunk) ? (
           <>
-            <h2 className="text-lg font-bold">Chunk {currentChunk + 1}</h2>
+            <h2 className="text-lg font-bold">Section {currentChunk + 1}:</h2><br></br>
             {chunkedSets[currentChunk] && chunkedSets[currentChunk][currentTermIndex] ? (
-  <p className="mb-2">
+  <p className="mb-2 text-2xl">
     Definition: {chunkedSets[currentChunk][currentTermIndex].definition}
   </p>
 ) : (
   <p className="mb-2 text-gray-500 italic">Loading term...</p>
 )}
+
 
             <input
               type="text"
@@ -329,7 +355,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
               }}
               className="border p-2 rounded w-full"
             />
-            <button onClick={handleSubmit} className="mt-2 p-2 bg-blue-500 text-white rounded">
+            <button onClick={handleSubmit} className="mt-2 p-6 bg-red-800 text-white rounded">
               Submit
             </button>
             {feedback === "correct" && <p className="text-green-500">Correct!</p>}
@@ -337,7 +363,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
           </>
         ) : (
           <div>
-            <p>Chunk {currentChunk + 1} completed!</p>
+            <p>Section {currentChunk + 1} completed!</p>
             {chunkedSets[currentChunk]?.map(({ term }) => (
               <p key={term}>
                 {term}: {score[term]?.correct || 0}/{(score[term]?.correct || 0) + (score[term]?.wrong || 0)} 
@@ -348,11 +374,19 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
               onClick={() => setChunkStarted(true)}
               className="p-2 bg-gray-500 text-white rounded"
             >
-              Start Chunk {currentChunk + 2}
+              Start Section {currentChunk + 2}
             </button>
           </div>
         )}
       </Suspense>
+      <br></br><br></br>
+      <h2 className="text1x1 text-gray-400">Progress...</h2>
+      <div className="w-full bg-gray-200 rounded-full h-4 mt-6">
+  <div
+    className="bg-green-500 h-4 rounded-full transition-all duration-500"
+    style={{ width: `${(completedChunks.length / 4) * 100}%` }}
+  />
+</div>
       </div>
       <style jsx>{`
         .text-maroon {

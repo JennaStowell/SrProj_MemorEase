@@ -86,54 +86,59 @@ export default function MySetsPage() {
         }}
       >
         <Link href="/">
-          <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>Memorease</h1>
+          <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>MemorEase</h1>
         </Link>
   
        
-        <h1 className="text-6xl font-bold text-maroon mx-auto" style= {{fontFamily: "cursive"}} >My Sets</h1>
+        <h1 className="text-6xl font-system-ui text-maroon mx-auto" style= {{fontFamily: "cursive"}} >My Sets</h1>
   
         
         <Link href="/create">
-        <svg
-  xmlns="http://www.w3.org/2000/svg"
-  className="w-8 h-8 text-black cursor-pointer hover:text-gray-700"
-  fill="none"
-  viewBox="0 0 24 24"
-  stroke="currentColor"
-  role="img"
-  aria-label="create study set"
->
-  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-</svg>
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-8 h-8 text-black cursor-pointer hover:text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          role="img"
+          aria-label="create study set"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
         </Link>
       </div>
       <br></br> <br></br> <br></br>
       {sets.length === 0 ? (
-        <p className="text-center text-gray-600">You haven&apos;t created any sets yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sets.map((set) => (
-            <div
-              key={set.set_id}
-              className="relative bg-white shadow-md rounded-lg p-4 group flex items-center justify-between"
-            >
-              <Link href={`/mysets/details?setId=${set.set_id}`} passHref>
-                <span className="text-xl font-medium cursor-pointer hover:underline">
-                  {set.set_name}
-                </span>
-              </Link>
+  <p className="text-center text-gray-600">You haven&apos;t created any sets yet.</p>
+) : (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {sets.map((set) => (
+    <Link
+      key={set.set_id}
+      href={`/mysets/details?setId=${set.set_id}`}
+      passHref
+      className="group relative bg-white shadow-lg rounded-2xl p-8 flex items-center justify-center text-center h-40 cursor-pointer transition-transform hover:scale-105"
+    >
+      <span className="text-xl font-semibold break-words">
+        {set.set_name}
+      </span>
+      
+      <button
+        onClick={(e) => {
+          e.preventDefault(); // prevent Link navigation
+          handleDeleteSet(set.set_id);
+        }}
+        className="absolute top-3 right-3 text-red-600 hover:text-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        aria-label="Delete set"
+      >
+        <Trash2 className="w-5 h-5" />
+      </button>
+    </Link>
+  ))}
+</div>
 
-              <button
-                onClick={() => handleDeleteSet(set.set_id)}
-                className="text-red-600 hover:text-red-800 transition-colors duration-200 opacity-0 group-hover:opacity-100"
-                aria-label="Delete set"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+)}
+
 
       <style jsx>{`
         .text-maroon {
