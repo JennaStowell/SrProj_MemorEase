@@ -57,41 +57,93 @@ export default function HomePage() {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      {/* Top Navigation */}
-      <div 
-        style={{
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
-          padding: '10px 20px', 
-          backgroundColor: '#fff',
-        }}
-      >
-        <h1 style={{ fontFamily: 'cursive', fontSize: '36px' }}>Memorease</h1>
-        <div>
-          <span>{session?.user?.name}</span>
-          <form action="/api/auth/signout" method="POST" style={{ display: 'inline' }}>
-            <button type="submit" style={{ marginLeft: '15px' }}>Log out</button>
-          </form>
-        </div>
-      </div>
-      <br />
-
-      <div className="mt-10">
-        <Link href="/mysets"><h2 className="text-4xl font-semibold text-red-900 mb-4">Study My Sets</h2></Link> <br></br>
-        {randomSets.length === 0 ? (
-          <p className="text-gray-600">No sets available yet. Try creating one!</p>
-        ) : (
-          <div className="flex gap-4 flex-wrap">
-            {randomSets.map((set) => (
-              <Link key={set.set_id} href={`/mysets/details?setId=${set.set_id}`}>
-                <div className="relative w-32 h-32 perspective">
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow px-5 py-5">
+        <div style={{ padding: '20px' }}>
+          {/* Top Navigation */}
+          <div 
+            style={{
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
+              padding: '10px 20px', 
+              backgroundColor: '#fff',
+            }}
+          >
+            <h1 style={{ fontFamily: 'cursive', fontSize: '36px' }}>MemorEase</h1>
+            <div>
+              <span>{session?.user?.name}</span>
+              <form action="/api/auth/signout" method="POST" style={{ display: 'inline' }}>
+                <button type="submit" style={{ marginLeft: '15px' }}>Log out</button>
+              </form>
+            </div>
+          </div>
+          <br />
+  
+          <div className="mt-10">
+            <Link href="/mysets">
+              <h2 className="text-4xl font-system-ui text-red-900 mb-4 flex justify-center">
+                Study My Sets
+              </h2>
+            </Link> 
+            <br />
+            <div className="flex justify-center">
+              {randomSets.length === 0 ? (
+                <p className="text-gray-600">
+                  No sets available yet. <span><Link href='/create'>Try creating one!</Link></span>
+                </p>
+              ) : (
+                <div className="flex gap-4 flex-wrap">
+                  {randomSets.map((set) => (
+                    <Link key={set.set_id} href={`/mysets/details?setId=${set.set_id}`}>
+                      <div className="relative w-50 h-50 perspective">
+                        <div className="flip-card">
+                          <div className="flip-card-inner">
+                            <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
+                              <span className="text-sm font-semibold">{set.set_name}</span>
+                            </div>
+                            <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+                              <span className="text-sm text-red-800 font-semibold">Click to Study</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+  
+                  <Link href="/mysets">
+                    <div className="relative w-50 h-50 perspective">
+                      <div className="flip-card">
+                        <div className="flip-card-inner">
+                          <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
+                            <span className="text-sm font-semibold text-red-800">...see all</span>
+                          </div>
+                          <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+                            <span className="text-sm text-red-800 font-semibold">View All Sets</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+  
+          {/* Public Sets Section */}
+          <div>
+            <br /><br /><br />
+            <div className="flex justify-center">
+              <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Public Sets</h2>
+            </div>
+            <div className="flex justify-center" style={{ display: 'flex', gap: '20px' }}>
+              {[...Array(3)].map((_, index) => (
+                <div key={index} className="relative w-50 h-50 perspective">
                   <div className="flip-card">
                     <div className="flip-card-inner">
-                      <div className="flip-card-front flex items-center justify-center bg-gray-200 border border-gray-400 rounded-md text-center px-2">
-                        <span className="text-sm font-semibold">{set.set_name}</span>
+                      <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
+                        <span className="text-sm font-semibold">Public Set {index + 1}</span>
                       </div>
                       <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
                         <span className="text-sm text-red-800 font-semibold">Click to Study</span>
@@ -99,44 +151,43 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-              </Link>
-            ))}
-
-            {/* "See more" link */}
-            <Link href="/mysets" className="ml-4 self-center text-blue-600 font-semibold">
-              ...see more
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* Public Sets Section */}
-      <div>
-        <br /><br /><br />
-        <h2 className="text-4xl font-semibold text-red-900 mb-4">Public Sets</h2> <br></br>
-
-        {/* Placeholder Image Boxes with flip effect */}
-        <div style={{ display: 'flex', gap: '20px' }}>
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="relative w-32 h-32 perspective">
-              <div className="flip-card">
-                <div className="flip-card-inner">
-                  <div className="flip-card-front flex items-center justify-center bg-gray-200 border border-gray-400 rounded-md text-center px-2">
-                    <span className="text-sm font-semibold">Public Set {index + 1}</span>
-                  </div>
-                  <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
-                    <span className="text-sm text-red-800 font-semibold">Click to Study</span>
+              ))}
+              <Link href="/mysets">
+                <div className="relative w-50 h-50 perspective">
+                  <div className="flip-card">
+                    <div className="flip-card-inner">
+                      <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
+                        <span className="text-sm font-semibold text-red-800">...coming soon</span>
+                      </div>
+                      <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+                        <span className="text-sm text-red-800 font-semibold">View All Sets</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
-          ))}
-          <Link href="/mysets" className="ml-4 self-center text-blue-600 font-semibold">
-              ...see more
-            </Link>
+          </div>
         </div>
-      </div>
-      
+      </main>
+  
+      {/* Footer */}
+      <footer className="bg-gray-100 text-gray-800 py-8 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+          <div className="flex items-center space-x-3">
+            <img src='images/MemorEase_Logo_NoWords.png' alt="Memorease Logo" className="h-10 w-10 object-contain" />
+            <span className="text-1xl font-system-ui text-black">Memorease</span>
+          </div>
+          <div className="text-center md:text-left text-sm text-gray-700">
+            <p>Created by Jenna Stowell</p>
+            <p>Contact: (603) 260-1440</p>
+          </div>
+          <div className="text-sm text-gray-500">
+            &copy; {new Date().getFullYear()} Memorease. All rights reserved.
+          </div>
+        </div>
+      </footer>
+  
       <style jsx>{`
         .perspective {
           perspective: 1000px;
@@ -172,4 +223,4 @@ export default function HomePage() {
       `}</style>
     </div>
   );
-}
+}  

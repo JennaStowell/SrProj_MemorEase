@@ -12,6 +12,7 @@ export default function FlashcardPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [seeAll, setSeeAll] = useState(false); // 👈 new state
 
   useEffect(() => {
     async function fetchTerms() {
@@ -30,19 +31,18 @@ export default function FlashcardPage() {
   }, [setId]);
 
   const nextCard = () => {
-    setFlipped(false); // Reset flip state when moving to next card
+    setFlipped(false);
     setCurrentIndex((prev) => (prev + 1) % terms.length);
   };
 
   const prevCard = () => {
-    setFlipped(false); // Reset flip state when moving to previous card
+    setFlipped(false);
     setCurrentIndex((prev) => (prev - 1 + terms.length) % terms.length);
   };
 
   const toggleFlip = () => setFlipped((prev) => !prev);
-
   const toggleExpand = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent card flip from being triggered when clicking "Read More"
+    e.stopPropagation();
     setExpanded((prev) => !prev);
   };
 
@@ -52,91 +52,145 @@ export default function FlashcardPage() {
     </div>
   );
 
-  const maxLength = 350; // Maximum length of text to display before "Read More"
+  const maxLength = 350;
   const definition = terms[currentIndex].definition;
 
   return (
     <div>
+      {/* Top bar */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',  
-          padding: "10px 20px", 
-          backgroundColor: "#fff", 
-          width: "100%", 
-          position: "sticky",  
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          padding: "10px 20px",
+          backgroundColor: "#fff",
+          width: "100%",
+          position: "sticky",
           top: 0,
-          zIndex: 10,  
+          zIndex: 10,
         }}
       >
-        <h1 className="text-red-900 text-5xl font-bold" style={{ fontFamily: "cursive" }}>
+        <h1 className="text-black text-5xl font-system-ui" style={{ fontFamily: "cursive" }}>
           Set: {setName}
         </h1>
 
-        <div className="text-lg text-gray-600">
+        <div className="flex items-center gap-4">
+          {/* See All / Return button */}
+          <button
+            className="btn"
+            onClick={() => {
+              setSeeAll((prev) => !prev);
+              setExpanded(false); // reset expanded when switching views
+              setFlipped(false);
+            }}
+          >
+            {seeAll ? "Return to Single View" : "See All"}
+          </button>
+
           <Link href={`/mysets/details?setId=${setId}`} className="return-link">
-            Exit 
+            Exit
           </Link>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div
-        className="flashcard-container"
-        onMouseEnter={() => !expanded && toggleFlip()} // Prevent flip if expanded
-        onMouseLeave={() => !expanded && toggleFlip()} // Prevent flip if expanded
-      >
-        <div className={`flashcard ${flipped ? "flipped" : ""}`}>
-          <div className="flashcard-side flashcard-front">{terms[currentIndex].term}</div>
-          <div className="flashcard-side flashcard-back">
-            {expanded || definition.length <= maxLength ? (
-              definition
-            ) : (
-              <>
-                {definition.slice(0, maxLength)}...
-                <button onClick={toggleExpand} className="read-more-btn">
-                  Read More
-                </button>
-              </>
-            )}
+
+      {/* Main area */}
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        {!seeAll ? (
+          // Single Card View
+          <>
+            <div
+              className="flashcard-container"
+              onMouseEnter={() => !expanded && toggleFlip()}
+              onMouseLeave={() => !expanded && toggleFlip()}
+            >
+              <div className={`flashcard ${flipped ? "flipped" : ""}`}>
+                <div className="flashcard-side flashcard-front">{terms[currentIndex].term}</div>
+                <div className="flashcard-side flashcard-back">
+                  {expanded || definition.length <= maxLength ? (
+                    definition
+                  ) : (
+                    <>
+                      {definition.slice(0, maxLength)}...
+                      <button onClick={toggleExpand} className="read-more-btn">
+                        Read More
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            {/* Buttons */}
+            <div className="mt-6 flex space-x-4">
+              <button onClick={prevCard} className="btn">← Previous</button>
+              <button onClick={nextCard} className="btn">Next →</button>
+            </div>
+
+            <div className="mt-4">
+              <button onClick={toggleFlip} aria-label="Flip card">
+                🔄
+              </button>
+            </div>
+          </>
+        ) : (
+          // See All View
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {terms.map((term, index) => (
+              <div
+                key={index}
+                className="flashcard-container"
+                onMouseEnter={(e) => {
+                  const card = e.currentTarget.querySelector(".flashcard");
+                  if (card) card.classList.add("flipped");
+                }}
+                onMouseLeave={(e) => {
+                  const card = e.currentTarget.querySelector(".flashcard");
+                  if (card) card.classList.remove("flipped");
+                }}
+              >
+                <div className="flashcard">
+                  <div className="flashcard-side flashcard-front">{term.term}</div>
+                  <div className="flashcard-side flashcard-back">
+                    {term.definition.length <= maxLength ? (
+                      term.definition
+                    ) : (
+                      <>
+                        {term.definition.slice(0, maxLength)}...
+                        {/* No "read more" button in all view */}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
-      <br></br>
-
-      <div className="mt-6 flex space-x-4">
-        <button onClick={prevCard} className="btn">← Previous</button>
-        <button onClick={nextCard} className="btn">Next →</button>
+        )}
       </div>
 
-      <div className="mt-4">
-        <button onClick={toggleFlip} aria-label="Flip card">
-            🔄
-        </button>
-        </div>
-
-        </div>
-
+      {/* Styles */}
       <style jsx>{`
         .return-link {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        font-size: 1.2rem;
-        color: #800000;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    .return-link:hover {
-        text-decoration: underline;
-    }
+          font-size: 1.2rem;
+          color: #800000;
+          text-decoration: none;
+          font-weight: bold;
+        }
+        .return-link:hover {
+          text-decoration: underline;
+        }
         .flashcard-container {
           perspective: 1000px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
         .flashcard {
-          width: 400px; /* Increased width */
-          height: 250px; /* Increased height */
+          width: 500px;
+          height: 300px;
           position: relative;
           transform-style: preserve-3d;
           transition: transform 0.5s;
@@ -151,35 +205,27 @@ export default function FlashcardPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px; /* Increased padding */
+          padding: 20px;
           text-align: center;
           background: white;
           border: 2px solid #800000;
           border-radius: 12px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          font-size: clamp(1rem, 2vw, 1.5rem);
+          font-size: clamp(1rem, 2vw, 1.3rem);
           font-weight: bold;
           backface-visibility: hidden;
-          word-wrap: break-word;
           overflow-wrap: break-word;
-          overflow-y: auto; /* Enables scrolling if needed */
-          padding-bottom: 20px; /* Set default padding */
-          padding-top: 20px; /* Set default padding */
-          flex-direction: column; /* Makes the definition scrollable while keeping the card layout intact */
+          overflow-y: auto;
+          flex-direction: column;
         }
         .flashcard-back {
           transform: rotateY(180deg);
           background: white;
           color: black;
-          overflow-y: auto;
-          max-height: 100%; /* Ensure the back card doesn’t overflow */
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start; /* Align top of definition */
         }
         .btn {
-          padding: 12px 24px; /* Slightly larger buttons */
-          font-size: 1.2rem;
+          padding: 10px 20px;
+          font-size: 1.1rem;
           background-color: #800000;
           color: white;
           border-radius: 6px;
@@ -201,20 +247,6 @@ export default function FlashcardPage() {
         }
         .read-more-btn:hover {
           background-color: #b30000;
-        }
-
-        /* New styles for the flip button */
-        .flip-btn {
-          padding: 8px 16px;
-          font-size: 1rem;
-          background-color: #d3d3d3; /* Gray background */
-          color: black;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-        .flip-btn:hover {
-          background-color: #a8a8a8; /* Darker gray on hover */
         }
       `}</style>
     </div>
