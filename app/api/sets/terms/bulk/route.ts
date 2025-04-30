@@ -13,13 +13,12 @@ export async function POST(req: Request) {
 
     const { setId, userId, terms }: { setId: string; userId: string; terms: TermData[] } = body;
 
-    // Validate setId
-    const setIdNum = parseInt(setId, 10);
-    if (isNaN(setIdNum)) {
-      return NextResponse.json({ error: "Invalid setId" }, { status: 400 });
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(setId)) {
+      return NextResponse.json({ error: "Invalid setId format" }, { status: 400 });
     }
 
-    // Insert terms into `terms` table and get their IDs
+    
     const createdTerms = await Promise.all(
       terms.map(async ({ term, definition }: TermData) => {
         return db.terms.create({
@@ -34,12 +33,12 @@ export async function POST(req: Request) {
 
     console.log("Terms Created:", createdTerms);
 
-    // Insert into `set_content` table
+    
     await db.setContent.createMany({
       data: createdTerms.map((t, index) => ({
-        set_id: setIdNum,
+        set_id: setId, 
         term_id: t.term_id,
-        order: index + 1, // Maintain order from CSV
+        order: index + 1,
       })),
     });
 
