@@ -133,7 +133,7 @@ export default async function Dashboard() {
       </div>
       <div className="text-center md:text-left text-sm text-gray-700">
         <p>Created by Jenna Stowell</p>
-        <p>Contact: (603) 260-1440</p>
+        <p>www.linkedin.com/in/jenna-m-stowell</p>
       </div>
       <div className="text-sm text-gray-500">
         &copy; {new Date().getFullYear()} Memorease. All rights reserved.

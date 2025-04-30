@@ -58,27 +58,66 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow px-5 py-5">
-        <div style={{ padding: '20px' }}>
-          {/* Top Navigation */}
-          <div 
-            style={{
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', 
-              padding: '10px 20px', 
-              backgroundColor: '#fff',
-            }}
-          >
-            <h1 style={{ fontFamily: 'cursive', fontSize: '36px' }}>MemorEase</h1>
-            <div>
-              <span>{session?.user?.name}</span>
-              <form action="/api/auth/signout" method="POST" style={{ display: 'inline' }}>
-                <button type="submit" style={{ marginLeft: '15px' }}>Log out</button>
-              </form>
-            </div>
-          </div>
+  <main className="flex-grow px-5 py-5">
+    <div style={{ padding: '20px' }}>
+      {/* Top Navigation */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          padding: '10px 20px',
+          backgroundColor: '#fff',
+        }}
+      >
+        <h1 style={{ fontFamily: 'cursive', fontSize: '36px' }}>MemorEase</h1>
+
+        {/* Right section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <span>{session?.user?.name}</span>
+
+          <Link href="/create">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-8 h-8 text-black cursor-pointer hover:text-gray-700 border-1 border-white shadow-sm "
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              role="img"
+              aria-label="create study set"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          </Link>
+
+          <form action="/api/auth/signout" method="POST">
+  <button type="submit" aria-label="Log out">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-8 h-8 text-black cursor-pointer hover:text-gray-700 border-1 border-white shadow-sm"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"
+      />
+    </svg>
+  </button>
+</form>
+        </div>
+      </div>
+    </div>
+
           <br />
   
           <div className="mt-10">
@@ -168,7 +207,6 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
       </main>
   
       {/* Footer */}
@@ -180,13 +218,14 @@ export default function HomePage() {
           </div>
           <div className="text-center md:text-left text-sm text-gray-700">
             <p>Created by Jenna Stowell</p>
-            <p>Contact: (603) 260-1440</p>
+            <p>www.linkedin.com/in/jenna-m-stowell</p>
           </div>
           <div className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} Memorease. All rights reserved.
           </div>
         </div>
       </footer>
+
   
       <style jsx>{`
         .perspective {

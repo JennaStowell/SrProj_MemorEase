@@ -6,35 +6,32 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const setId = searchParams.get("setId");
 
-    if (!setId) {
-      return NextResponse.json({ error: "Missing setId" }, { status: 400 });
-    }
-
-    const setIdNum = Number(setId);
-    if (isNaN(setIdNum)) {
+    if (!setId || typeof setId !== "string") {
       return NextResponse.json({ error: "Invalid setId" }, { status: 400 });
     }
 
-    // Fetch the set's name
+    
     const set = await db.sets.findUnique({
-      where: { set_id: setIdNum },
+      where: { set_id: setId },
       select: { set_name: true },
     });
 
     if (!set) {
-      return NextResponse.json({ error: `Set with ID ${setIdNum} not found` }, { status: 404 });
+      return NextResponse.json({ error: `Set with ID ${setId} not found` }, { status: 404 });
     }
 
-    // Fetch related terms
+    
+    const termLinks = await db.setContent.findMany({
+      where: { set_id: setId },
+      select: { term_id: true },
+    });
+
+    const termIds = termLinks.map((sc: { term_id: number }) => sc.term_id);
+
     const terms = await db.terms.findMany({
       where: {
         term_id: {
-          in: (
-            await db.setContent.findMany({
-              where: { set_id: setIdNum },
-              select: { term_id: true },
-            })
-          ).map((sc: { term_id: number }) => sc.term_id), // Explicitly type `sc` as having `term_id`
+          in: termIds,
         },
       },
     });

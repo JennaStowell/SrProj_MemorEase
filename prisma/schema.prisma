@@ -18,7 +18,7 @@ model User {
 }
 
 model sets {
-  set_id     Int          @id @default(autoincrement())
+  set_id     String       @id @default(uuid())
   user_id    String
   set_name   String
   SetContent SetContent[]
@@ -35,7 +35,7 @@ model Terms {
 }
 
 model SetContent {
-  set_id  Int
+  set_id  String
   term_id Int
   order   Int
   sets    sets  @relation(fields: [set_id], references: [set_id])
