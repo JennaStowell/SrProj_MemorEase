@@ -96,7 +96,7 @@ export default function MySetsPage() {
         <Link href="/create">
           <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-8 h-8 text-black cursor-pointer hover:text-gray-700"
+          className="w-8 h-8 text-black cursor-pointer hover:text-gray-700 border-1 border-white shadow-sm "
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
