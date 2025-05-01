@@ -249,7 +249,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
                 key={term}
                 className="bg-white shadow-md rounded-xl px-6 py-4 flex justify-between items-start border-l-4"
                 style={{
-                  borderColor: isCorrect ? "#16a34a" : "#b91c1c", // green/red border
+                  borderColor: isCorrect ? "#16a34a" : "#b91c1c", 
                 }}
               >
                 <div>

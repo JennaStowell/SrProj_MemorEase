@@ -72,9 +72,9 @@ export default function FlashcardPage() {
           zIndex: 10,
         }}
       >
-        <h1 className="text-black text-5xl font-system-ui" style={{ fontFamily: "cursive" }}>
-          Set: {setName}
-        </h1>
+        <h1 className="text-black text-3xl font-system-ui" style={{ fontFamily: "cursive" }}>
+        MemorEase
+      </h1>
 
         <div className="flex items-center gap-4">
           {/* See All / Return button */}
