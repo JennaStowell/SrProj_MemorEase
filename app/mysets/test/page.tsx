@@ -368,20 +368,20 @@ export default function TestPage() {
         <div className="flex flex-wrap justify-center gap-4 mt-6 ">
 
   <Link href={`/mysets/details?setId=${setId}`}>
-    <button className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg">
+    <button className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl transition-transform transform hover:scale-105 focus:outline-none">
       Return to Set
     </button>
   </Link>
 
   <button
-    className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg"
+    className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl transition-transform transform hover:scale-105 focus:outline-none"
     onClick={restartTest}
   >
     Retry
   </button>
 
   <button
-    className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg"
+    className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl transition-transform transform hover:scale-105 focus:outline-none"
     onClick={() =>
       generatePDF({
         title: "MemorEase Completion Certificate",
