@@ -234,9 +234,10 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
   if (!isLoading && currentChunk >= chunkedSets.length)
     return (
       <div className="flex flex-col items-center mt-24 text-center px-6">
-        <h2 className="text-4xl font-bold text-gray-800 mb-8">Performance Breakdown</h2><br></br><br></br>
+        <div className="border-2 border-white shadow-2xl py-8 px-60">
+        <h2 className="text-4xl font-system-ui text-gray-800 mb-8">Performance Breakdown</h2><br></br><br></br>
   
-        <div className="w-full max-w-2xl space-y-4">
+        <div className="w-full max-w-2xl space-y-8 shadow-2xl rounded">
           {chunkedSets.flat().map(({ term }) => {
             const correct = score[term]?.correct || 0;
             const wrong = score[term]?.wrong || 0;
@@ -274,17 +275,18 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
           {!isLoading && (
             <button
               onClick={generatePDF}
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl hover:bg-purple-200 transition focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               Download Certificate
             </button>
           )}
   
           <Link href={`/mysets/details?setId=${setId}`}>
-            <button className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <button className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-500">
               Back to My Set
             </button>
           </Link>
+          </div>
         </div>
       </div>
       
@@ -355,7 +357,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
               }}
               className="border p-2 rounded w-full"
             />
-            <button onClick={handleSubmit} className="mt-2 p-6 bg-red-800 text-white rounded">
+            <button onClick={handleSubmit} className="mt-2 p-2 bg-red-800 text-white rounded">
               Submit
             </button>
             {feedback === "correct" && <p className="text-green-500">Correct!</p>}
