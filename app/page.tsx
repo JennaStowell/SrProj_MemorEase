@@ -125,7 +125,7 @@ export default async function Dashboard() {
     </div>
 </main>
     <div>
-    <footer className="bg-gray-100 text-gray-800 py-8 px-4">
+    <footer className="bg-gray-100 text-gray-800 p-2">
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
       <div className="flex items-center space-x-3">
         <img src='images/MemorEase_Logo_NoWords.png' alt="Memorease Logo" className="h-10 w-10 object-contain" />

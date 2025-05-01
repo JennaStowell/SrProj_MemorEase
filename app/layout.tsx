@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'MemorEase',
   description: 'Study and Memory retention tool',
   icons: {
-    icon: 'images/MemorEase_Logo_NoWords.png'
+    icon: '/images/MemorEase_Logo_NoWords.png'
   }
 }
 

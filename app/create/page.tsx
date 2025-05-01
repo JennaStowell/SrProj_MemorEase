@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
+import Link from "next/link";
 
 export default function SetsPage() {
   const { data: session, status } = useSession();
@@ -54,11 +55,11 @@ export default function SetsPage() {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (event.key === "Enter") {
-      // If it is the last term, add the term
+      
       if (index === terms.length - 1) {
         handleAddTerm(index);
       } else {
-        // Move focus to the next term input
+        
         const nextTermInput = document.getElementById(`term-${index + 1}`) as HTMLInputElement;
         if (nextTermInput) nextTermInput.focus();
       }
@@ -66,13 +67,13 @@ export default function SetsPage() {
   };
 
   const handleSaveSet = async () => {
-    // Save the last term if it's not empty
+   
     const lastTerm = terms[terms.length - 1];
     if (lastTerm.term.trim() && lastTerm.definition.trim()) {
-      await handleAddTerm(terms.length - 1); // Add the last term
+      await handleAddTerm(terms.length - 1); 
     }
 
-    router.push("/mysets"); // Redirect to "My Sets" after saving
+    router.push("/mysets"); 
   };
 
   const handleCSVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,80 +101,158 @@ export default function SetsPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
-        <h1 className="text-3xl font-bold text-red-900 mb-6 text-center">Create a Set</h1>
-
-        {!setId ? (
-          <div className="flex flex-col space-y-4">
-            <input
-              type="text"
-              placeholder="Set Name"
-              value={setName}
-              onChange={(e) => setSetName(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900"
-              onKeyPress={(e) => e.key === "Enter" && handleCreateSet()} // Create set on "Enter"
-            />
-            <button
-              onClick={handleCreateSet}
-              className="w-full bg-red-900 text-white py-2 rounded-lg"
+    <div>
+      <nav>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            padding: "10px 20px",
+            backgroundColor: "#fff",
+            width: "100%",
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+          }}
+        >
+          <h1 className="text-black text-3xl font-system-ui" style={{ fontFamily: "cursive" }}>
+            MemorEase
+          </h1>
+          <Link href="/mysets" className="text-gray-500 underline">
+            Exit
+          </Link>
+        </div>
+      </nav><br></br><br></br>
+  
+      <div className="flex items-center justify-center bg-white p-8">
+        <div className="bg-white border border-gray-300 shadow-xl rounded-xl p-10 w-full max-w-2xl">
+          <div className="flex justify-end items-center space-x-2 mb-6">
+            <h1 className="text-2xl font-semibold text-black">Create</h1>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-8 h-8 text-black"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
-              Create Set
-            </button>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.232 5.232l3.536 3.536M9 13l6-6m2-2a2.828 2.828 0 114 4l-10 10H5v-4l10-10z"
+              />
+            </svg>
           </div>
-        ) : (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-red-900">Set: {setName}</h2>
-            <div className="flex space-x-4">
-              <button onClick={() => setUploadMode(false)} className="px-4 py-2 bg-gray-200 rounded-lg">Manual Entry</button>
-              <button onClick={() => setUploadMode(true)} className="px-4 py-2 bg-gray-200 rounded-lg">Upload CSV</button>
+  
+          {!setId ? (
+            <div className="flex flex-col space-y-4">
+              <h3 className="text-lg font-medium text-gray-700">Input Name:</h3>
+              <input
+                type="text"
+                placeholder="Set Name"
+                value={setName}
+                onChange={(e) => setSetName(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                onKeyPress={(e) => e.key === "Enter" && handleCreateSet()}
+              />
+              <button
+                onClick={handleCreateSet}
+                className="w-full bg-red-800 hover:bg-red-900 text-white py-3 rounded-md font-semibold"
+              >
+                Next
+              </button>
             </div>
-            {!uploadMode ? (
-              <>
-                <h3 className="text-lg font-medium text-gray-700">Add Terms</h3>
-                {terms.map((t, i) => (
-                  <div key={i} className="flex space-x-2">
-                    <input
-                      id={`term-${i}`}
-                      type="text"
-                      placeholder="Term"
-                      value={t.term}
-                      onChange={(e) =>
-                        setTerms((prev) =>
-                          prev.map((item, idx) =>
-                            idx === i ? { ...item, term: e.target.value } : item
+          ) : (
+            <div className="flex flex-col space-y-6">
+              <h2 className="text-xl font-system-ui text-red-900">Name: {setName}</h2>
+  
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setUploadMode(false)}
+                  className={`px-4 py-2 rounded-md font-medium ${
+                    uploadMode === false ? "bg-gray-300" : "bg-gray-100"
+                  }`}
+                >
+                  Manual Entry
+                </button>
+                <button
+                  onClick={() => setUploadMode(true)}
+                  className={`px-4 py-2 rounded-md font-medium ${
+                    uploadMode === true ? "bg-gray-300" : "bg-gray-100"
+                  }`}
+                >
+                  Upload CSV
+                </button> 
+              </div><br></br>
+  
+              {!uploadMode ? (
+                <>
+                  <h3 className="text-lg font-medium text-gray-700">Add Terms</h3>
+                  {terms.map((t, i) => (
+                    <div key={i} className="flex space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Term"
+                        value={t.term}
+                        onChange={(e) =>
+                          setTerms((prev) =>
+                            prev.map((item, idx) =>
+                              idx === i ? { ...item, term: e.target.value } : item
+                            )
                           )
-                        )
-                      }
-                      onKeyPress={(e) => handleKeyPress(e, i)}
-                      className="w-1/2 px-4 py-2 border rounded-lg"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Definition"
-                      value={t.definition}
-                      onChange={(e) =>
-                        setTerms((prev) =>
-                          prev.map((item, idx) =>
-                            idx === i ? { ...item, definition: e.target.value } : item
+                        }
+                        onKeyPress={(e) => handleKeyPress(e, i)}
+                        className="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Definition"
+                        value={t.definition}
+                        onChange={(e) =>
+                          setTerms((prev) =>
+                            prev.map((item, idx) =>
+                              idx === i ? { ...item, definition: e.target.value } : item
+                            )
                           )
-                        )
-                      }
-                      className="w-1/2 px-4 py-2 border rounded-lg"
-                    />
-                    <button onClick={() => handleAddTerm(i)} className="bg-gray-200 px-4 py-2 rounded-lg">➕</button>
-                  </div>
-                ))}
-                <button onClick={handleSaveSet} className="w-full bg-red-900 text-white py-2 rounded-lg">Save Set</button>
-              </>
-            ) : (
-              <div>
-                <input type="file" accept=".csv" onChange={handleCSVUpload} className="block w-full px-4 py-2 border rounded-lg" />
-              </div>
-            )}
-          </div>
-        )}
+                        }
+                        className="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                      />
+                      <button onClick={() => handleAddTerm(i)} className="bg-gray-100 px-3 py-2 rounded-md hover:bg-gray-200">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6 text-black"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={handleSaveSet}
+                    className="w-full bg-red-800 hover:bg-red-900 text-white py-3 rounded-md font-semibold mt-4"
+                  >
+                    Save Set
+                  </button>
+                </>
+              ) : (
+                <div>
+                  <input
+                    type="file"
+                    accept=".csv"
+                    onChange={handleCSVUpload}
+                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
-}
+}  

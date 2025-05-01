@@ -79,7 +79,7 @@ export default function FlashcardPage() {
         <div className="flex items-center gap-4">
           {/* See All / Return button */}
           <button
-            className="btn"
+            className="bg-white shadow-xl p-4 hover:text-red-900"
             onClick={() => {
               setSeeAll((prev) => !prev);
               setExpanded(false); // reset expanded when switching views
@@ -125,14 +125,14 @@ export default function FlashcardPage() {
             <br />
 
             {/* Buttons */}
-            <div className="mt-6 flex space-x-4">
-              <button onClick={prevCard} className="btn">← Previous</button>
-              <button onClick={nextCard} className="btn">Next →</button>
+            <div className="mt-6 flex space-x-4 pb-4">
+              <button onClick={prevCard} className="font-bold py-2 bg-red-900 rounded text-white border-2 border-white shadow-md px-6">←</button>
+              <button onClick={nextCard} className="font-bold py-2 bg-red-900 rounded text-white border-2 border-white shadow-md px-6">→</button>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 p-1 shadow-md">
               <button onClick={toggleFlip} aria-label="Flip card">
-                🔄
+              ↺
               </button>
             </div>
           </>
@@ -208,7 +208,7 @@ export default function FlashcardPage() {
           padding: 20px;
           text-align: center;
           background: white;
-          border: 2px solid #800000;
+          border: 2px solid white;
           border-radius: 12px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           font-size: clamp(1rem, 2vw, 1.3rem);

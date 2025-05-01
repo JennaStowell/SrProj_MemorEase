@@ -165,7 +165,7 @@ export default function SetDetailsPage() {
           backgroundColor: "#fff", 
           width: "100%", 
         }}>
-          <Link href="/">
+          <Link href="/mysets">
           <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>MemorEase</h1>
         </Link>
         {session?.user?.name && (
@@ -175,14 +175,14 @@ export default function SetDetailsPage() {
         )}
       </div>
       <br></br>
-      <h1 className="text-maroon text-5xl font-system-ui" style={{fontFamily: "cursive"}}>Set: {setName}</h1>
+      <h1 className="text-maroon text-5xl font-system-ui">Set: {setName}</h1>
 
       <div className="flex justify-between mb-4">
   <div className="ml-4">
     <br></br>
     <Dropdown label={<span className="text-1xl">Study Modes</span>} dismissOnClick={false}  color = "alternative" className = "hover:text-red-800">
       {["Flashcards", "Study", "Test", "Matching"].map((mode) => (
-        <DropdownItem key={mode} className="text-5xl py-6 px-8">
+        <DropdownItem key={mode} className="text-5xl py-6 px-6">
           <Link href={`/mysets/${mode.toLowerCase()}?setId=${setId}`} className="text-2xl">
             {mode}
           </Link>
@@ -204,18 +204,11 @@ export default function SetDetailsPage() {
 <div className="flex justify-center">
   <div
     className="rounded-lg shadow-lg p-6 w-full max-w-4xl bg-white bubble-style">  {/* Ensure bg-amber-50 is here */}
-    <table className="w-full border-collapse border border-red-200">
-      <thead>
-        <tr className="bg-white">
-          <th className="border border-red-200 p-2 text-center"> </th>
-          <th className="border border-red-200 p-2 text-center"> </th>
-          <th></th>
-        </tr>
-      </thead>
+    <table className="w-full border-collapse border-2 border-white shadow-sm">
       <tbody>
         {terms.map((term, index) => (
           <tr key={index} className="group hover:bg-gray-100">
-            <td className="p-4 text-center text-xl border-t border-b border-red-200">
+            <td className="p-4 text-center text-xl border-t border-b border-2 border-white shadow-sm">
               {editMode && editingIndex === index ? (
                 <input
                   className="border p-2 w-full"
@@ -226,7 +219,7 @@ export default function SetDetailsPage() {
                 term.term
               )}
             </td>
-            <td className="p-4 text-center text-xl border-t border-b border-red-200">
+            <td className="p-4 text-center text-xl  border-2 border-white shadow-sm">
               {editMode && editingIndex === index ? (
                 <input
                   className="border p-2 w-full"
@@ -331,6 +324,7 @@ export default function SetDetailsPage() {
       Share
     </Button>
   </ButtonGroup>
+  <br></br><br></br><br></br>
 </div>
 
 <style jsx>{`

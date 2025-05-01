@@ -90,7 +90,6 @@ export default function MySetsPage() {
         </Link>
   
        
-        <h1 className="text-6xl font-system-ui text-maroon mx-auto" style= {{fontFamily: "cursive"}} >My Sets</h1>
   
         
         <Link href="/create">
@@ -107,7 +106,12 @@ export default function MySetsPage() {
         </svg>
         </Link>
       </div>
-      <br></br> <br></br> <br></br>
+      <br></br> 
+      <h2 className="text-5xl font-system-ui text-red-900 mb-4 flex justify-center">
+                My Sets
+              </h2>
+      <br></br> <br></br>
+
       {sets.length === 0 ? (
   <p className="text-center text-gray-600">You haven&apos;t created any sets yet.</p>
 ) : (
@@ -117,7 +121,7 @@ export default function MySetsPage() {
       key={set.set_id}
       href={`/mysets/details?setId=${set.set_id}`}
       passHref
-      className="group relative bg-white shadow-lg rounded-2xl p-8 flex items-center justify-center text-center h-40 cursor-pointer transition-transform hover:scale-105"
+      className="group relative bg-white shadow-xl rounded-2xl p-8 flex items-center justify-center text-center h-40 cursor-pointer transition-transform hover:scale-105"
     >
       <span className="text-xl font-semibold break-words">
         {set.set_name}

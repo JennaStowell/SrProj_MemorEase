@@ -251,26 +251,83 @@ export default function TestPage() {
 
   if (!testType) {
     return (
-      <div className="flex flex-col items-center mt-[33vh] text-center p-6">
-        <h1 className="text-5xl font-bold mb-6">Select Test Type</h1>
-        <button className="btn text-2xl" onClick={() => setTestType("multiple-choice")}>Multiple Choice</button>
-        <button className="btn mt-4 text-2xl" onClick={() => setTestType("written")}>Written Answer</button>
-        <Link href={`/mysets/details?setId=${setId}`} className="return-link mt-6 text-lg underline">
-          Need to keep studying?
-        </Link>
-      </div>
+      <div className="min-h-screen w-full bg-gradient-to-b from-white to-gray-100">
+        <nav> <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        padding: "10px 20px",
+        backgroundColor: "#fff",
+        width: "100%",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+      }}
+    >
+      <h1 className="text-black text-3xl font-system-ui" style={{ fontFamily: "cursive" }}>
+        MemorEase
+      </h1>
+      <Link href={`/mysets/details?setId=${setId}`} className="text-gray-200 underline">
+        Exit
+      </Link>
+    </div></nav><br></br><br></br>
+    <div className="flex flex-col items-center justify-center px-4">
+      <div className="flex flex-col items-center justify-center p-10 rounded-lg border-2 border-white shadow-xl">
+  <h1 className="text-4xl md:text-4xl font-extrabold text-black-900 mb-10 text-center">
+    Select Test Type
+  </h1><br></br><br></br>
+
+  <div className="flex flex-col md:flex-row gap-6">
+    {/* Multiple Choice Box */}
+    <div
+      onClick={() => setTestType("multiple-choice")}
+      className="cursor-pointer bg-white shadow-2xl rounded-xl overflow-hidden transform transition hover:scale-105 w-72 h-48 flex items-center justify-center"
+    >
+      <img
+        src='/images/mutiple_choice.png'
+        alt="Multiple Choice"
+        className="object-cover w-full h-full"
+      />
+    </div>
+
+    {/* Written Answer Box */}
+    <div
+      onClick={() => setTestType("written")}
+      className="cursor-pointer bg-white shadow-2xl rounded-xl overflow-hidden transform transition hover:scale-105 w-72 h-48 flex items-center justify-center"
+    >
+      <img
+        src='/images/written_answer.png' // <-- replace with your image
+        alt="Written Answer"
+        className="object-cover w-full h-full"
+      />
+    </div>
+  </div>
+  <Link
+    href={`/mysets/details?setId=${setId}`}
+    className="mt-10 py-3 text-gray-600 text-base hover:text-gray-800 underline transition"
+  >
+    Exit
+  </Link>
+  </div>
+</div>
+</div>
     );
   }
 
   if (showResults) {
     return (
-      <div className="flex flex-col items-center mt-[33vh] text-center p-6">
-        <h1 className="text-5xl font-bold text-gray-800">Test Results</h1>
+      <div className="flex flex-col items-center mt-[33vh] text-center p-6 ">
+        <div className="border-2 border-white shadow-2xl py-8 px-60">
+        <h1 className="text-5xl font-system-ui text-black-800">Test Results</h1>
+        <div className="border-2 p-8 rounded-2xl border-white shadow-2xl">
         <p className="text-2xl mt-6 text-gray-600">
           Score: {questions.filter((q, i) => q.correctAnswer.toLowerCase() === (userAnswers[i] || "").toLowerCase()).length} / {questions.length}
         </p>
+        </div><br></br>
 
-        <div className="mt-10 w-full max-w-3xl space-y-6">
+        <div className="mt-10 w-full max-w-3xl space-y-6 p-6">
           {questions.map((q, i) => {
             const isCorrect = userAnswers[i]?.toLowerCase() === q.correctAnswer.toLowerCase();
             return (
@@ -306,30 +363,44 @@ export default function TestPage() {
           })}
         </div>
 
+<br></br>
 
-        <button className="btn mt-6 text-2xl" onClick={restartTest}>Retry</button>
-        <Link href={`/mysets/details?setId=${setId}`}>
-          <button className="btn mt-4 text-xl">Need to keep studying?</button>
-        </Link>
-        <button
-          className="btn mt-6 text-xl"
-          onClick={() =>
-            generatePDF({
-              title: "MemorEase Completion Certificate",
-              username,
-              setName,
-              score: `${questions.filter((q, i) => q.correctAnswer.toLowerCase() === (userAnswers[i] || "").toLowerCase()).length} / ${questions.length}`,
-              certificateId: `CERT-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
-              results: questions.map((q, i) => ({
-                question: q.question,
-                correctAnswer: q.correctAnswer,
-                userAnswer: userAnswers[i] || "No answer",
-              })),
-            })
-          }
-        >
-          Download Certificate
-        </button>
+        <div className="flex flex-wrap justify-center gap-4 mt-6 ">
+
+  <Link href={`/mysets/details?setId=${setId}`}>
+    <button className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg">
+      Return to Set
+    </button>
+  </Link>
+
+  <button
+    className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg"
+    onClick={restartTest}
+  >
+    Retry
+  </button>
+
+  <button
+    className="bg-white hover:bg-gray-300 hover:text-white text-black font-system-ui py-2 px-4 rounded-xl shadow-xl transition duration-200 text-lg"
+    onClick={() =>
+      generatePDF({
+        title: "MemorEase Completion Certificate",
+        username,
+        setName,
+        score: `${questions.filter((q, i) => q.correctAnswer.toLowerCase() === (userAnswers[i] || "").toLowerCase()).length} / ${questions.length}`,
+        certificateId: `CERT-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+        results: questions.map((q, i) => ({
+          question: q.question,
+          correctAnswer: q.correctAnswer,
+          userAnswer: userAnswers[i] || "No answer",
+        })),
+      })
+    }
+  >
+    Download Certificate
+  </button>
+  </div>
+</div>
 
 
       </div>
@@ -348,80 +419,131 @@ export default function TestPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-2xl rounded-3xl p-10 max-w-2xl w-full mx-4 text-center">
-        <h1 className="text-4xl font-bold mb-6">
-          Question {currentQuestionIndex + 1} / {questions.length}
-        </h1> <br></br><br></br>
-        <p className="text-2xl mb-8">{currentQuestion.question} ?</p><br></br>
-
+      <div className="flex bg-white shadow-2xl border-2 border-gray-100 rounded-3xl overflow-hidden w-full max-w-5xl mx-4">
         {testType === "multiple-choice" ? (
-          <div className="flex flex-col space-y-4">
-            {currentQuestion.options.map((option: string, i: number) => (
-              <button
-                key={i}
-                className="btn-answer text-xl"
-                onClick={() => {
-                  handleAnswer(option);
-                  nextQuestion();
-                }}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+          <>
+            {/* Left Section - 70% */}
+            <div className="w-[70%] p-10 text-center">
+              <div className="text-left">
+                <h1 className="text-3xl font-system-ui mb-6">
+                  <span className="font-semibold">Q. </span>{currentQuestion.question} ?
+                </h1>
+              </div>
+              <br /><br />
+              <div className="flex flex-col space-y-4">
+                {currentQuestion.options.map((option: string, i: number) => (
+                  <button
+                    key={i}
+                    className="btn-answer text-xl"
+                    onClick={() => {
+                      handleAnswer(option);
+                      nextQuestion();
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+  
+            {/* Right Section - 30% */}
+            <div className="w-[30%] relative border-2 border-white shadow-2xl">
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-30"
+                style={{ backgroundImage: "url('/images/mutiple_choice.png')" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-5 bg-gray-300 h-3/4 rounded-full relative">
+                  <div
+                    className="absolute bottom-0 w-full bg-red-900 rounded-full transition-all duration-500"
+                    style={{
+                      height: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
-          <div className="flex flex-col items-center">
-            <input
-              className="border p-3 w-72 text-xl text-center rounded-lg"
-              type="text"
-              value={userAnswers[currentQuestionIndex] || ""}
-              onChange={(e) => handleAnswer(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <button className="btn mt-6 text-xl" onClick={nextQuestion}>
-              Next
-            </button>
-          </div>
+          <>
+            {/* Left Section - 70% */}
+            <div className="w-[70%] p-10 text-center">
+              <h1 className="text-2xl font-system-ui mb-6 text-left">
+                <span className="font-semibold">Q. </span>{currentQuestion.question} ?
+              </h1><br></br><br></br>
+              <input
+                className="border p-5 w-90 text-xl text-left rounded-lg"
+                type="text"
+                placeholder="Answer"
+                value={userAnswers[currentQuestionIndex] || ""}
+                onChange={(e) => handleAnswer(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <button className="btn mt-6 text-xl" onClick={nextQuestion}>
+                Next
+              </button>
+            </div>
+  
+            {/* Right Section - 30% */}
+            <div className="w-[30%] relative border-l-2 border-white shadow-2xl">
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-30"
+                style={{ backgroundImage: "url('/images/written_answer.png')" }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-5 bg-gray-300 h-3/4 rounded-full relative">
+                  <div
+                    className="absolute bottom-0 w-full bg-red-900 rounded-full transition-all duration-500"
+                    style={{
+                      height: `${((currentQuestionIndex + 1) / questions.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
         )}
-
-        <style jsx>{`
-          .btn {
-            padding: 12px 24px;
-            background-color: #800000;
-            color: white;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-          }
-          .btn:hover {
-            background-color: #b30000;
-            transform: scale(1.05);
-          }
-          .btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.4);
-          }
-          .btn-answer {
-            background-color: #f9fafb;
-            border: 2px solid #800000;
-            border-radius: 10px;
-            padding: 12px 20px;
-            font-size: 1.25rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-          }
-          .btn-answer:hover {
-            background-color: #800000;
-            color: white;
-            transform: scale(1.03);
-          }
-          .star {
-            color: #800000;
-            margin-right: 8px;
-          }
-        `}</style>
       </div>
+  
+      <style jsx>{`
+        .btn {
+          padding: 12px 24px;
+          background-color: #800000;
+          color: white;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .btn:hover {
+          background-color: #b30000;
+          transform: scale(1.05);
+        }
+        .btn:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.4);
+        }
+        .btn-answer {
+          background-color: #f9fafb;
+          border: 2px solid white;
+          border-radius: 10px;
+          padding: 12px 20px;
+          font-size: 1.25rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .btn-answer:hover {
+          background-color: #e5e7eb;
+          color: black;
+          transform: scale(1.03);
+        }
+        .star {
+          color: #800000;
+          margin-right: 8px;
+        }
+      `}</style>
     </div>
   );
 }  
