@@ -156,7 +156,7 @@ export default function MatchingGame() {
         {gameStarted && matches * 2 === cards.length && (
           <div className="buttons">
             <button className="return-button" onClick={() => router.push(`/mysets/details?setId=${setId}`)}>
-              Return to My Sets
+              Return to My Set
             </button>
             <button className="play-again-button" onClick={fetchAndShuffleCards}>
               Play Again

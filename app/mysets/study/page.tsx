@@ -27,26 +27,25 @@ export default function StudyPage() {
   const [correctCount, setCorrectCount] = useState<{ [key: string]: number }>({});
   const [logoBase64, setLogoBase64] = useState<string>('');
 
-useEffect(() => {
-  const loadLogo = async () => {
-    const imagePath = '/images/MemorEase_Logo.png';
-    const response = await fetch(imagePath);
-    const imageBlob = await response.blob();
-    const base64Image = await blobToBase64(imageBlob);
-    setLogoBase64(base64Image);
+  useEffect(() => {
+    const loadLogo = async () => {
+      const imagePath = '/images/MemorEase_Logo.png';
+      const response = await fetch(imagePath);
+      const imageBlob = await response.blob();
+      const base64Image = await blobToBase64(imageBlob);
+      setLogoBase64(base64Image);
+    };
+    loadLogo();
+  }, []);
+
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   };
-  loadLogo();
-}, []);
-
-const blobToBase64 = (blob: Blob): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-};
-
 
   useEffect(() => {
     if (!setId) {
@@ -60,7 +59,6 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
         if (!res.ok) throw new Error("Failed to fetch terms");
         const data = await res.json();
         setSetName(data.setName);
-        
 
         const shuffledTerms = [...data.terms].sort(() => Math.random() - 0.5);
         const chunkSize = Math.ceil(shuffledTerms.length / 4);
@@ -85,14 +83,15 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
     if (!currentTerm) return;
     const normalizedInput = userInput.trim().toLowerCase();
     const correctAnswer = currentTerm.term.toLowerCase();
-
+  
     if (normalizedInput === correctAnswer) {
+      // Only increment correct count after two successful attempts.
       setFeedback("correct");
       setCorrectCount((prev) => ({
         ...prev,
         [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
       }));
-
+  
       setScore((prev) => ({
         ...prev,
         [currentTerm.term]: {
@@ -100,7 +99,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
           wrong: prev[currentTerm.term]?.wrong || 0,
         },
       }));
-
+  
       setTimeout(() => {
         setFeedback("");
         setUserInput("");
@@ -114,7 +113,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
         ...prev,
         [currentTerm.term]: (prev[currentTerm.term] || 0) + 1,
       }));
-
+  
       setScore((prev) => ({
         ...prev,
         [currentTerm.term]: {
@@ -124,6 +123,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
       }));
     }
   };
+  
   
   const generatePDF = () => {
     if (!logoBase64) return;
@@ -231,6 +231,12 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
     }
   }, [currentTermIndex, chunkedSets, currentChunk, completedChunks, attempts, chunkStarted]);
 
+  const showAnswerIfNeeded = (term: string) => {
+    return attempts[term] >= 2 && feedback === "incorrect" ? (
+      <p className="text-gray-500">Correct Answer: {chunkedSets[currentChunk].find(t => t.term === term)?.term}</p>
+    ) : null;
+  };
+
   if (!isLoading && currentChunk >= chunkedSets.length)
     return (
       <div className="flex flex-col items-center mt-24 text-center px-6">
@@ -275,14 +281,14 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
           {!isLoading && (
             <button
               onClick={generatePDF}
-              className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl hover:bg-purple-200 transition focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl transition-transform transform hover:scale-105 focus:outline-none"
             >
               Download Certificate
             </button>
           )}
   
           <Link href={`/mysets/details?setId=${setId}`}>
-            <button className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <button className="px-6 py-3 bg-white text-black font-system-ui rounded-lg shadow-xl  transition-transform transform hover:scale-105 focus:outline-none">
               Back to My Set
             </button>
           </Link>
@@ -361,7 +367,12 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
               Submit
             </button>
             {feedback === "correct" && <p className="text-green-500">Correct!</p>}
-            {feedback === "incorrect" && <p className="text-red-500">Try again!</p>}
+            {feedback === "incorrect" && (
+    <>
+      <p className="text-red-500">Try again!</p>
+      {showAnswerIfNeeded(chunkedSets[currentChunk][currentTermIndex].term)}
+    </>
+  )}
           </>
         ) : (
           <div>
