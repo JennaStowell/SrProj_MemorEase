@@ -15,18 +15,9 @@ export default function SetDetailsPage() {
   const { data: session } = useSession();
 
   const [setName, setSetName] = useState<string>("");
-  const [terms, setTerms] = useState<{ term: string; definition: string }[]>([]);
+  const [terms, setTerms] = useState<{ term: string; definition: string; term_id: number }[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}/study/details?setId=${setId}`;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      alert("Link copied to clipboard!");
-    }).catch((err) => {
-      console.error("Failed to copy:", err);
-      alert("Failed to copy link.");
-    });
-  };
+  const [ownerId, setOwnerId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!setId) return;
@@ -39,6 +30,7 @@ export default function SetDetailsPage() {
         const data = await res.json();
         setTerms(data.terms);
         setSetName(data.setName);
+        setOwnerId(data.userId);
       } catch (err) {
         console.error(err);
       } finally {
@@ -48,6 +40,22 @@ export default function SetDetailsPage() {
 
     fetchSetDetails();
   }, [setId]);
+
+  useEffect(() => {
+    if (ownerId && session?.user?.id !== ownerId) {
+      router.push("/mysets");
+    }
+  }, [ownerId, session, router]);
+
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/study/details?setId=${setId}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch((err) => {
+      console.error("Failed to copy:", err);
+      alert("Failed to copy link.");
+    });
+  };
 
   if (loading) {
     return (
@@ -61,7 +69,6 @@ export default function SetDetailsPage() {
 
   return (
     <div>
-      {/* Header Section */}
       <div
         style={{
           display: "flex",
@@ -72,7 +79,9 @@ export default function SetDetailsPage() {
           backgroundColor: "#fff",
           width: "100%",
         }}>
-        <h1 className="text-maroon text-5xl font-bold"  style={ {fontFamily: "cursive"} }>Set: {setName}</h1>
+        <Link href="/mysets">
+          <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>MemorEase</h1>
+        </Link>
         {session?.user?.name && (
           <div className="text-lg text-gray-600">
             <span>{session.user.name}!</span>
@@ -80,50 +89,44 @@ export default function SetDetailsPage() {
         )}
       </div>
       <br />
+      <h1 className="text-maroon text-5xl font-system-ui">Set: {setName}</h1>
 
-      <div className="mb-4 flex items-center justify-between w-full">
-        <ButtonGroup>
-          <Button
-  color="alternative"
-  className="m-2 text-xl px-6 py-3 bg-white hover:text-red-800"
-  onClick={() => handleShare()}
->
-  Share Set
-</Button>
-        </ButtonGroup>
-
-        <div className="mx-auto">
-         <Dropdown label="Study Modes" dismissOnClick={false} color="alternative" className="text-red-800 text-7x1">
+      <div className="flex justify-between mb-4">
+        <div className="ml-4">
+          <br />
+          <Dropdown label={<span className="text-1xl">Study Modes</span>} dismissOnClick={false} color="alternative" className="hover:text-red-800">
             {["Flashcards", "Study", "Test", "Matching"].map((mode) => (
-          <DropdownItem key={mode} className="text-5xl py-6 px-8">
-            <Link href={`/study/${mode.toLowerCase()}?setId=${setId}`} className="text-2xl">
-              {mode}
-            </Link>
-          </DropdownItem>
-        ))}
+              <DropdownItem key={mode} className="text-5xl py-6 px-6">
+                <Link href={`/study/${mode.toLowerCase()}?setId=${setId}`} className="text-2xl">
+                  {mode}
+                </Link>
+              </DropdownItem>
+            ))}
           </Dropdown>
         </div>
       </div>
+
       <br />
 
-      {/* Terms Table */}
       {terms.length === 0 ? (
-        <p className="text-center text-gray-600">No terms added yet.</p>
+        <div className="flex justify-center">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl text-center">
+            <p className="text-gray-600 text-lg">No terms added yet.</p>
+          </div>
+        </div>
       ) : (
         <div className="flex justify-center">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
-            <table className="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border border-gray-300 p-2">Term</th>
-                  <th className="border border-gray-300 p-2">Definition</th>
-                </tr>
-              </thead>
+          <div className="rounded-lg shadow-lg p-6 w-full max-w-4xl bg-white bubble-style">
+            <table className="w-full border-collapse border-2 border-white shadow-sm">
               <tbody>
                 {terms.map((term, index) => (
-                  <tr key={index} className="border border-gray-300 hover:bg-gray-100">
-                    <td className="p-2">{term.term}</td>
-                    <td className="p-2">{term.definition}</td>
+                  <tr key={index} className="group hover:bg-gray-100">
+                    <td className="p-4 text-center text-xl border-t border-b border-2 border-white shadow-sm">
+                      {term.term}
+                    </td>
+                    <td className="p-4 text-center text-xl border-2 border-white shadow-sm">
+                      {term.definition}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -131,17 +134,34 @@ export default function SetDetailsPage() {
           </div>
         </div>
       )}
-
-      <div className="mt-6 flex justify-center space-x-4">
-        <button
-          onClick={() => router.push("/mysets")}
-          className="p-2 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Back to All Sets
-        </button>
+      <br />
+      <div className="flex justify-center mt-4">
+        <ButtonGroup>
+          <Button
+            color="alternative"
+            className="m-2 text-xl px-6 py-3 bg-white hover:text-red-800"
+            onClick={() => router.push("/mysets")}
+          >
+            Back
+          </Button>
+          <Button
+            color="alternative"
+            className="m-2 text-xl px-6 py-3 bg-white hover:text-red-800"
+            onClick={handleShare}
+          >
+            Share
+          </Button>
+        </ButtonGroup>
       </div>
+      <br /><br /><br />
 
       <style jsx>{`
+        .bubble-style {
+          border-radius: 20px;
+          padding: 40px;
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
         .text-maroon {
           color: #800000;
         }
