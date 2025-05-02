@@ -17,6 +17,9 @@ export default function HomePage() {
   const [allSets, setAllSets] = useState<Set[]>([]);
   const [randomSets, setRandomSets] = useState<Set[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sharedSets, setSharedSets] = useState<{ shared_name: string; link: string }[]>([]);
+const [randomSharedSets, setRandomSharedSets] = useState<{ shared_name: string; link: string }[]>([]);
+
 
   useEffect(() => {
     const fetchSets = async () => {
@@ -47,6 +50,29 @@ export default function HomePage() {
       setRandomSets(randomSelection);
     }
   }, [allSets]);
+
+  useEffect(() => {
+    const fetchSharedSets = async () => {
+      try {
+        const res = await fetch("/api/shared");
+        if (!res.ok) throw new Error("Failed to fetch shared sets");
+        const data = await res.json();
+        setSharedSets(data);
+      } catch (err) {
+        console.error("Error loading shared sets:", err);
+      }
+    };
+  
+    fetchSharedSets();
+  }, []);
+
+  useEffect(() => {
+    if (sharedSets.length > 0) {
+      const shuffled = [...sharedSets].sort(() => 0.5 - Math.random());
+      setRandomSharedSets(shuffled.slice(0, 3));
+    }
+  }, [sharedSets]);
+  
 
   if (status === "loading" || isLoading) {
     return (
@@ -170,43 +196,45 @@ export default function HomePage() {
             </div>
           </div>
   
-          {/* Public Sets Section */}
+          {/* Shared with me Section */}
           <div>
             <br /><br /><br />
             <div className="flex justify-center">
               <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Shared With Me</h2>
             </div>
             <div className="flex justify-center" style={{ display: 'flex', gap: '20px' }}>
-              {[...Array(3)].map((_, index) => (
-                <div key={index} className="relative w-50 h-50 perspective">
-                  <div className="flip-card">
-                    <div className="flip-card-inner">
-                      <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
-                        <span className="text-sm font-semibold">Set {index + 1}</span>
-                      </div>
-                      <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
-                        <span className="text-sm text-red-800 font-semibold">Click to Study</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <Link href="/mysets">
-                <div className="relative w-50 h-50 perspective">
-                  <div className="flip-card">
-                    <div className="flip-card-inner">
-                      <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
-                        <span className="text-sm font-semibold text-red-800">...coming soon</span>
-                      </div>
-                      <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
-                        <span className="text-sm text-red-800 font-semibold">View All Sets</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+  {randomSharedSets.map((set, index) => (
+    <Link key={index} href={set.link}>
+      <div className="relative w-50 h-50 perspective">
+        <div className="flip-card">
+          <div className="flip-card-inner">
+            <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
+              <span className="text-sm font-semibold">{set.shared_name}</span>
+            </div>
+            <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+              <span className="text-sm text-red-800 font-semibold">Click to Study</span>
             </div>
           </div>
+        </div>
+      </div>
+    </Link>
+  ))}
+  <Link href="/shared">
+    <div className="relative w-50 h-50 perspective">
+      <div className="flip-card">
+        <div className="flip-card-inner">
+          <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
+            <span className="text-sm font-semibold text-red-800">...see all</span>
+          </div>
+          <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+            <span className="text-sm text-red-800 font-semibold">View All Sets</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Link>
+</div>
+</div>
       </main>
   
       {/* Footer */}

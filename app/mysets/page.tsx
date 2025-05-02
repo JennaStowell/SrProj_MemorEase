@@ -129,7 +129,7 @@ export default function MySetsPage() {
         
         <button
           onClick={(e) => {
-            e.preventDefault(); // prevent Link navigation
+            e.preventDefault(); 
             handleDeleteSet(set.set_id);
           }}
           className="absolute top-3 right-3 text-red-600 hover:text-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-200"

@@ -43,3 +43,10 @@ model SetContent {
 
   @@id([set_id, term_id])
 }
+
+model Shared {
+  shared_id   String   @id @default(uuid())
+  shared_name String
+  link        String
+  inserted_at DateTime @default(now())
+}

@@ -79,7 +79,7 @@ export default function SetDetailsPage() {
           backgroundColor: "#fff",
           width: "100%",
         }}>
-        <Link href="/mysets">
+        <Link href="/shared">
           <h1 style={{ fontFamily: "cursive", fontSize: "36px" }}>MemorEase</h1>
         </Link>
         {session?.user?.name && (
@@ -140,7 +140,7 @@ export default function SetDetailsPage() {
           <Button
             color="alternative"
             className="m-2 text-xl px-6 py-3 bg-white hover:text-red-800"
-            onClick={() => router.push("/mysets")}
+            onClick={() => router.push("/shared")}
           >
             Back
           </Button>
