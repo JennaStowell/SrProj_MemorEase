@@ -196,44 +196,55 @@ const [randomSharedSets, setRandomSharedSets] = useState<{ shared_name: string; 
             </div>
           </div>
   
-          {/* Shared with me Section */}
           <div>
-            <br /><br /><br />
-            <div className="flex justify-center">
-              <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Shared With Me</h2>
+  <br /><br /><br />
+  <div className="flex justify-center">
+    <h2 className="text-4xl font-system-ui text-red-900 mb-4 pb-5">Shared With Me</h2>
+  </div>
+
+  <div className="flex justify-center" style={{ display: 'flex', gap: '20px' }}>
+    {randomSharedSets.length > 0 ? (
+      <>
+        {randomSharedSets.map((set, index) => (
+          <Link key={index} href={set.link}>
+            <div className="relative w-50 h-50 perspective">
+              <div className="flip-card">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
+                    <span className="text-sm font-semibold">{set.shared_name}</span>
+                  </div>
+                  <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+                    <span className="text-sm text-red-800 font-semibold">Click to Study</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-center" style={{ display: 'flex', gap: '20px' }}>
-  {randomSharedSets.map((set, index) => (
-    <Link key={index} href={set.link}>
-      <div className="relative w-50 h-50 perspective">
-        <div className="flip-card">
-          <div className="flip-card-inner">
-            <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md shadow-xl text-center px-2">
-              <span className="text-sm font-semibold">{set.shared_name}</span>
-            </div>
-            <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
-              <span className="text-sm text-red-800 font-semibold">Click to Study</span>
+          </Link>
+        ))}
+        
+        <Link href="/shared">
+          <div className="relative w-50 h-50 perspective">
+            <div className="flip-card">
+              <div className="flip-card-inner">
+                <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
+                  <span className="text-sm font-semibold text-red-800">...see all</span>
+                </div>
+                <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
+                  <span className="text-sm text-red-800 font-semibold">View All Sets</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
+      </>
+    ) : (
+      <div className="text-center">
+        <p className="text-gray-600">
+                  No sets entered yet. <span className="underline text-blue-500"><Link href='/shared'>Click here!</Link></span>
+                </p>
       </div>
-    </Link>
-  ))}
-  <Link href="/shared">
-    <div className="relative w-50 h-50 perspective">
-      <div className="flip-card">
-        <div className="flip-card-inner">
-          <div className="flip-card-front flex items-center justify-center bg-white border border-white rounded-md text-center shadow-xl px-2">
-            <span className="text-sm font-semibold text-red-800">...see all</span>
-          </div>
-          <div className="flip-card-back flex items-center justify-center bg-red-100 border border-red-400 rounded-md">
-            <span className="text-sm text-red-800 font-semibold">View All Sets</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </Link>
-</div>
+    )}
+  </div>
 </div>
       </main>
   
