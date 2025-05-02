@@ -15,6 +15,7 @@ model User {
   hashedPassword String
   Terms          Terms[]
   sets           sets[]
+  shared         Shared[]
 }
 
 model sets {
@@ -49,4 +50,8 @@ model Shared {
   shared_name String
   link        String
   inserted_at DateTime @default(now())
+
+  user_id String
+
+  User    User @relation(fields: [user_id], references: [id])
 }
