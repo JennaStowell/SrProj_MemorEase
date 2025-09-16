@@ -1,3 +1,6 @@
+<div align="center">
+  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+</div>
 **MemorEase:** A Learning and Retention Tool <br>
 
 Learning Goals
