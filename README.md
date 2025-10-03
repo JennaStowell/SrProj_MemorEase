@@ -12,7 +12,9 @@ Learning Goals
 
 <div align="center">
   <h2>~ The Home Page ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="images/dashboard.png" alt="Screenshot" style="width: 500px;"/>
+  <h4>Flips upon hover</h4>
+  <img src="images/flips.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
