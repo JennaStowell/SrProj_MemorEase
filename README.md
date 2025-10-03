@@ -19,30 +19,39 @@ Learning Goals
 
 <div align="center">
   <h2>~ Inside The Study Set ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/set.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Flashcards ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <h4>Flips upon hover</h4>
+  <img src="public/images/singleFlashcard.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/allFlashcard.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
-  <h2>~ Multiple Choice ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <h2>~ Practice Mode ~</h2>
+  <h4>Chunks the information out for you and enforces repetion</h4>
+  <img src="public/images/study2.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
-  <h2>~ Written Answer ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <h2>~ Test Mode ~</h2>
+  <h3>Written Answer or Multiple Choice</h3>
+  <img src="public/images/selectTest.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/multipleChoice.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/writtenAnswer.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/cert.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Matching Game ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/matching.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Misc. UI/UX ~</h2>
-  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/misc1.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/misc2.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/misc3.png" alt="Screenshot" style="width: 500px;"/>
 </div>
