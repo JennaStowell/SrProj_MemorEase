@@ -32,7 +32,7 @@ https://www.memorease.shop/
 
 <div align="center">
   <h2>~ Practice Mode ~</h2>
-  <h4>Chunks the information out for you and enforces repetion</h4>
+  <h4>Chunks the information out for you and enforces repetition</h4>
   <img src="public/images/study2.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
