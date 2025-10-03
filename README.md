@@ -12,37 +12,37 @@ Learning Goals
 
 <div align="center">
   <h2>~ The Home Page ~</h2>
-  <img src="images/dashboard.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/dashboard.png" alt="Screenshot" style="width: 500px;"/>
   <h4>Flips upon hover</h4>
-  <img src="images/flips.png" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/flips.png" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Inside The Study Set ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Flashcards ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Multiple Choice ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Written Answer ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Matching Game ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
 
 <div align="center">
   <h2>~ Misc. UI/UX ~</h2>
-  <img src="images/" alt="Screenshot" style="width: 500px;"/>
+  <img src="public/images/" alt="Screenshot" style="width: 500px;"/>
 </div>
